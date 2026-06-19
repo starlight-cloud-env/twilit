@@ -80,3 +80,9 @@
   flex: 1;
   min-height: 400px;
 }
+
+@media (max-width: 768px) {
+  .dayName {
+    font-size: 0.6rem;
+  }
+}

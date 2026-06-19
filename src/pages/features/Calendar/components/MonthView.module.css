@@ -80,3 +80,9 @@
   color: var(--color-bg);
   font-weight: 700;
 }
+
+@media (max-width: 768px) {
+  .dayLabel {
+    font-size: 0.6rem;
+  }
+}
