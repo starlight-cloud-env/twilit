@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from '../lib/supabase.js'
 
 const AuthContext = createContext(null)
 
@@ -6,14 +7,25 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Supabase auth will be wired in here during Phase 4
-  // For now we simulate a resolved but unauthenticated state
   useEffect(() => {
-    setLoading(false)
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null)
+      }
+    )
+
+    return () => subscription.unsubscribe()
   }, [])
 
   const signOut = async () => {
-    // Supabase sign out will go here in Phase 4
+    await supabase.auth.signOut()
     setUser(null)
   }
 

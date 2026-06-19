@@ -93,3 +93,9 @@
 .back:hover {
   color: var(--color-accent);
 }
+
+.error {
+  font-size: 0.875rem;
+  color: var(--color-error);
+  text-align: center;
+}
