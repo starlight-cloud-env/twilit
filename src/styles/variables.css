@@ -1,0 +1,24 @@
+[data-theme="aurora"] {
+  /* Colors */
+  --color-bg:         #0e0f18;
+  --color-surface:    #2a2f5a;
+  --color-muted:      #6b6fb0;
+  --color-accent:     #b9b8ff;
+  --color-text:       #f4f0ff;
+
+  /* Semantic */
+  --color-error:      #ff6b6b;
+  --color-success:    #6bffb8;
+
+  /* Gradients */
+  --gradient-main:   linear-gradient(135deg, #2a2f5a 0%, #1a1d35 50%, #0e0f18 100%);
+  --gradient-accent: linear-gradient(135deg, #b9b8ff 0%, #6b6fb0 100%);
+  --gradient-hero:   linear-gradient(to right, rgba(14,15,24,0.97) 0%, rgba(14,15,24,0.6) 50%, rgba(14,15,24,0.1) 100%);
+
+  /* Shadows */
+  --shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md:          0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg:          0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow:        0 0 20px rgba(185, 184, 255, 0.15);
+  --shadow-glow-strong: 0 0 40px rgba(185, 184, 255, 0.25);
+}

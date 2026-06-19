@@ -1,0 +1,24 @@
+[data-theme="lunar"] {
+  /* Colors */
+  --color-bg:         #0a0a0f;
+  --color-surface:    #1a1a2e;
+  --color-muted:      #6b7280;
+  --color-accent:     #e2e8f0;
+  --color-text:       #f8fafc;
+
+  /* Semantic */
+  --color-error:      #ff6b6b;
+  --color-success:    #6bffb8;
+
+  /* Gradients */
+  --gradient-main:   linear-gradient(135deg, #1a1a2e 0%, #12121f 50%, #0a0a0f 100%);
+  --gradient-accent: linear-gradient(135deg, #e2e8f0 0%, #6b7280 100%);
+  --gradient-hero:   linear-gradient(to right, rgba(10,10,15,0.97) 0%, rgba(10,10,15,0.6) 50%, rgba(10,10,15,0.1) 100%);
+
+  /* Shadows */
+  --shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md:          0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg:          0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow:        0 0 20px rgba(226, 232, 240, 0.1);
+  --shadow-glow-strong: 0 0 40px rgba(226, 232, 240, 0.2);
+}

@@ -1,0 +1,24 @@
+[data-theme="eclipse"] {
+  /* Colors */
+  --color-bg:         #080808;
+  --color-surface:    #141414;
+  --color-muted:      #6b5c00;
+  --color-accent:     #ffd700;
+  --color-text:       #ffffff;
+
+  /* Semantic */
+  --color-error:      #ff6b6b;
+  --color-success:    #6bffb8;
+
+  /* Gradients */
+  --gradient-main:   linear-gradient(135deg, #141414 0%, #0e0e0e 50%, #080808 100%);
+  --gradient-accent: linear-gradient(135deg, #ffd700 0%, #6b5c00 100%);
+  --gradient-hero:   linear-gradient(to right, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.6) 50%, rgba(8,8,8,0.1) 100%);
+
+  /* Shadows */
+  --shadow-sm:          0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:          0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg:          0 8px 32px rgba(0, 0, 0, 0.7);
+  --shadow-glow:        0 0 20px rgba(255, 215, 0, 0.15);
+  --shadow-glow-strong: 0 0 40px rgba(255, 215, 0, 0.3);
+}
