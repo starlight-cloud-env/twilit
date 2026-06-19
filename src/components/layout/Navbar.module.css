@@ -1,0 +1,102 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition: background-color 400ms ease;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.brand:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.authButton {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: 9999px;
+  padding: 0.4rem 1.1rem;
+  text-decoration: none;
+  transition: background 250ms ease, box-shadow 250ms ease;
+}
+
+.authButton:hover {
+  background: var(--color-muted);
+  box-shadow: var(--shadow-glow);
+  text-decoration: none;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownToggle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: 9999px;
+  padding: 0.4rem 1.1rem;
+  transition: background 250ms ease;
+}
+
+.dropdownToggle:hover {
+  background: var(--color-muted);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  list-style: none;
+  min-width: 140px;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.dropdownItem {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  transition: background 150ms ease;
+}
+
+.dropdownItem:hover {
+  background: var(--color-muted);
+}
+
+.dropdownItem.active {
+  color: var(--color-accent);
+  font-weight: 600;
+}
