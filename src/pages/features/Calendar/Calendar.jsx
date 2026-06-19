@@ -30,6 +30,8 @@ export default function Calendar() {
 
   const handleToday = () => setCurrent(new Date())
 
+  const handleJump = (date) => setCurrent(date)
+
   return (
     <div className={styles.page}>
 
@@ -37,6 +39,7 @@ export default function Calendar() {
       <Panel
         view={view}
         onViewChange={setView}
+        onJump={handleJump}
       />
 
       {/* Right canvas */}

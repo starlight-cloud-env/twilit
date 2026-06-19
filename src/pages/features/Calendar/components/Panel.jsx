@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import ViewSwitcher from './ViewSwitcher.jsx'
+import JumpToDate from './JumpToDate.jsx'
 import styles from './Panel.module.css'
 
-export default function Panel({ view, onViewChange }) {
+export default function Panel({ view, onViewChange, onJump }) {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   const contents = (
     <div className={styles.contents}>
       <p className={styles.sectionLabel}>View</p>
       <ViewSwitcher view={view} onChange={onViewChange} />
+      <div className={styles.divider} />
+      <JumpToDate view={view} onJump={onJump} />
     </div>
   )
 
