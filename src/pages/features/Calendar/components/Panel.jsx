@@ -1,15 +1,13 @@
 import { useState } from 'react'
 import ViewSwitcher from './ViewSwitcher.jsx'
-import MiniNavigator from './MiniNavigator.jsx'
 import styles from './Panel.module.css'
 
-export default function Panel({ view, onViewChange, current, onNavigate }) {
+export default function Panel({ view, onViewChange }) {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   const contents = (
     <div className={styles.contents}>
-      <MiniNavigator current={current} onChange={onNavigate} />
-      <div className={styles.divider} />
+      <p className={styles.sectionLabel}>View</p>
       <ViewSwitcher view={view} onChange={onViewChange} />
     </div>
   )
@@ -28,7 +26,12 @@ export default function Panel({ view, onViewChange, current, onNavigate }) {
           onClick={() => setDrawerOpen(prev => !prev)}
           aria-label="Toggle panel"
         >
-          <span className={styles.handleBar} />
+          <span className={styles.drawerIcon}>
+            {drawerOpen ? '⌄' : '⌃'}
+          </span>
+          <span className={styles.drawerLabel}>
+            {drawerOpen ? 'Close' : 'Options'}
+          </span>
         </button>
         <div className={`${styles.drawerContents} ${drawerOpen ? styles.open : ''}`}>
           {contents}
