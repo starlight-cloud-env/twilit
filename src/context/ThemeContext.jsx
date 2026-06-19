@@ -3,7 +3,6 @@ import { useAuth } from './AuthContext.jsx'
 
 const THEMES = ['aurora', 'solar', 'lunar', 'eclipse']
 const DEFAULT_THEME = 'aurora'
-const STORAGE_KEY = 'twilit-theme'
 
 const ThemeContext = createContext(null)
 
@@ -11,32 +10,37 @@ export function ThemeProvider({ children }) {
   const { user } = useAuth()
   const [theme, setTheme] = useState(DEFAULT_THEME)
 
-  // On mount, load saved theme from localStorage if it exists
+  // Derive a storage key per user so each user's preference is saved separately
+  const storageKey = user ? `twilit-theme-${user.id}` : null
+
+  // When user state resolves, load their saved theme
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    if (!user) {
+      setTheme(DEFAULT_THEME)
+      document.documentElement.setAttribute('data-theme', DEFAULT_THEME)
+      return
+    }
+
+    const saved = localStorage.getItem(`twilit-theme-${user.id}`)
     if (saved && THEMES.includes(saved)) {
       setTheme(saved)
+      document.documentElement.setAttribute('data-theme', saved)
+    } else {
+      setTheme(DEFAULT_THEME)
+      document.documentElement.setAttribute('data-theme', DEFAULT_THEME)
     }
-  }, [])
+  }, [user])
 
-  // Apply theme to the html element whenever it changes
+  // Apply theme to html element whenever theme changes
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  // When user signs out, revert to aurora
-  useEffect(() => {
-    if (!user) {
-      setTheme(DEFAULT_THEME)
-      localStorage.removeItem(STORAGE_KEY)
-    }
-  }, [user])
-
   const changeTheme = (newTheme) => {
-    if (!user) return // guests cannot change theme
+    if (!user) return
     if (!THEMES.includes(newTheme)) return
     setTheme(newTheme)
-    localStorage.setItem(STORAGE_KEY, newTheme)
+    localStorage.setItem(`twilit-theme-${user.id}`, newTheme)
   }
 
   return (
