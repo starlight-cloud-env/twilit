@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ViewSwitcher from './ViewSwitcher.jsx'
 import JumpToDate from './JumpToDate.jsx'
 import styles from './Panel.module.css'

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EventDetailModal from './EventDetailModal.jsx'
 import styles from './MonthView.module.css'
 
