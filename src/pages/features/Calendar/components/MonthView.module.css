@@ -117,3 +117,10 @@
 .eventPill:hover {
   opacity: 0.85;
 }
+
+.pillTime {
+  font-weight: 400;
+  opacity: 0.85;
+  margin-right: 3px;
+  font-size: 0.65rem;
+}

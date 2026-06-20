@@ -6,11 +6,15 @@ import EventModal from './components/EventModal.jsx'
 import { useEvents } from '../../../hooks/useEvents.js'
 import styles from './Calendar.module.css'
 
+function toDateStr(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
+
 export default function Calendar() {
   const [view, setView] = useState('month')
   const [current, setCurrent] = useState(new Date())
   const [showEventModal, setShowEventModal] = useState(false)
-  const { events, loading, createEvent, updateEvent, deleteEvent, getEventsForDate } = useEvents()
+  const { createEvent, updateEvent, deleteEvent, getEventsForDate } = useEvents()
 
   const handlePrev = () => {
     if (view === 'month') {
@@ -55,13 +59,13 @@ export default function Calendar() {
               <button className={styles.navButton} onClick={handlePrev}>‹</button>
               <button className={styles.navButton} onClick={handleNext}>›</button>
             </div>
+            <button
+              className={styles.newEventButton}
+              onClick={() => setShowEventModal(true)}
+            >
+              + New Event
+            </button>
           </div>
-          <button
-            className={styles.newEventButton}
-            onClick={() => setShowEventModal(true)}
-          >
-            + New Event
-          </button>
         </div>
 
         <div className={styles.view}>
@@ -87,6 +91,7 @@ export default function Calendar() {
         <EventModal
           onClose={() => setShowEventModal(false)}
           onCreate={createEvent}
+          initialDate={toDateStr(new Date())}
         />
       )}
 

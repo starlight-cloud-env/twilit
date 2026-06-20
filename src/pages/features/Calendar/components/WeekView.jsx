@@ -66,6 +66,11 @@ export default function WeekView({ current, getEventsForDate, onUpdate, onDelete
                     className={styles.eventPill}
                     onClick={() => setSelectedEvent(event)}
                   >
+                    {event.start_time && (
+                      <span className={styles.pillTime}>
+                        {formatTime(event.start_time)}
+                      </span>
+                    )}
                     {event.title}
                   </button>
                 ))}

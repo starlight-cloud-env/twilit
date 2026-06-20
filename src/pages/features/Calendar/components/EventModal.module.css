@@ -178,3 +178,11 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.overlay {
+  animation: fadeIn 200ms ease;
+}
+
+.modal {
+  animation: scaleIn 250ms var(--transition-bounce);
+}

@@ -44,6 +44,14 @@ export default function MonthView({ current, getEventsForDate, onUpdate, onDelet
     return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
   }
 
+  function formatTime(t) {
+    if (!t) return null
+    const [h, m] = t.split(':').map(Number)
+    const ampm = h >= 12 ? 'PM' : 'AM'
+    const hour = h % 12 || 12
+    return `${hour}:${String(m).padStart(2, '0')} ${ampm}`
+  }
+
   return (
     <div className={styles.monthView}>
 
@@ -82,6 +90,11 @@ export default function MonthView({ current, getEventsForDate, onUpdate, onDelet
                       className={styles.eventPill}
                       onClick={() => setSelectedEvent(event)}
                     >
+                      {event.start_time && (
+                        <span className={styles.pillTime}>
+                          {formatTime(event.start_time)}
+                        </span>
+                      )}
                       {event.title}
                     </button>
                   ))}
