@@ -3,7 +3,7 @@ import Panel from './components/Panel.jsx'
 import MonthView from './components/MonthView.jsx'
 import WeekView from './components/WeekView.jsx'
 import EventModal from './components/EventModal.jsx'
-import { useEvents } from './hooks/useEvents.js'
+import { useEvents } from '../../hooks/useEvents.js'
 import styles from './Calendar.module.css'
 
 export default function Calendar() {
