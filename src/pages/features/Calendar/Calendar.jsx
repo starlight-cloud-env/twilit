@@ -10,7 +10,7 @@ export default function Calendar() {
   const [view, setView] = useState('month')
   const [current, setCurrent] = useState(new Date())
   const [showEventModal, setShowEventModal] = useState(false)
-  const { createEvent, updateEvent, deleteEvent, getEventsForDate } = useEvents()
+  const { events, loading, createEvent, updateEvent, deleteEvent, getEventsForDate } = useEvents()
 
   const handlePrev = () => {
     if (view === 'month') {
