@@ -36,6 +36,14 @@ export default function WeekView({ current, getEventsForDate, onUpdate, onDelete
     ? `${MONTHS[weekStart.getMonth()]} ${weekStart.getFullYear()} – ${MONTHS[weekEnd.getMonth()]} ${weekEnd.getFullYear()}`
     : `${MONTHS[weekStart.getMonth()]} ${weekStart.getFullYear()}`
 
+  function formatTime(t) {
+    if (!t) return null
+    const [h, m] = t.split(':').map(Number)
+    const ampm = h >= 12 ? 'PM' : 'AM'
+    const hour = h % 12 || 12
+    return `${hour}:${String(m).padStart(2, '0')} ${ampm}`
+  }
+  
   return (
     <div className={styles.weekView}>
 

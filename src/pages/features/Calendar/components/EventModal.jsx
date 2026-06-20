@@ -44,6 +44,14 @@ export default function EventModal({ onClose, onCreate, initialDate }) {
     return null
   }
 
+  function formatTime(t) {
+    if (!t) return null
+    const [h, m] = t.split(':').map(Number)
+    const ampm = h >= 12 ? 'PM' : 'AM'
+    const hour = h % 12 || 12
+    return `${hour}:${String(m).padStart(2, '0')} ${ampm}`
+  }
+
   const handleSave = async () => {
     const err = validate()
     if (err) { setError(err); return }
