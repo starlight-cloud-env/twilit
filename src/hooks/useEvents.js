@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../../../../../lib/supabase.js'
-import { useAuth } from '../../../../../context/AuthContext.jsx'
+import { supabase } from '../lib/supabase.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
 export function useEvents() {
   const { user } = useAuth()
