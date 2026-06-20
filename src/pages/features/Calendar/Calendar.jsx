@@ -2,11 +2,15 @@ import { useState } from 'react'
 import Panel from './components/Panel.jsx'
 import MonthView from './components/MonthView.jsx'
 import WeekView from './components/WeekView.jsx'
+import EventModal from './components/EventModal.jsx'
+import { useEvents } from './hooks/useEvents.js'
 import styles from './Calendar.module.css'
 
 export default function Calendar() {
   const [view, setView] = useState('month')
   const [current, setCurrent] = useState(new Date())
+  const [showEventModal, setShowEventModal] = useState(false)
+  const { createEvent, updateEvent, deleteEvent, getEventsForDate } = useEvents()
 
   const handlePrev = () => {
     if (view === 'month') {
@@ -29,23 +33,19 @@ export default function Calendar() {
   }
 
   const handleToday = () => setCurrent(new Date())
-
   const handleJump = (date) => setCurrent(date)
 
   return (
     <div className={styles.page}>
 
-      {/* Left panel */}
       <Panel
         view={view}
         onViewChange={setView}
         onJump={handleJump}
       />
 
-      {/* Right canvas */}
       <div className={styles.canvas}>
 
-        {/* Canvas toolbar */}
         <div className={styles.toolbar}>
           <div className={styles.toolbarLeft}>
             <button className={styles.todayButton} onClick={handleToday}>
@@ -56,17 +56,39 @@ export default function Calendar() {
               <button className={styles.navButton} onClick={handleNext}>›</button>
             </div>
           </div>
+          <button
+            className={styles.newEventButton}
+            onClick={() => setShowEventModal(true)}
+          >
+            + New Event
+          </button>
         </div>
 
-        {/* Calendar view */}
         <div className={styles.view}>
           {view === 'month'
-            ? <MonthView current={current} />
-            : <WeekView current={current} />
+            ? <MonthView
+                current={current}
+                getEventsForDate={getEventsForDate}
+                onUpdate={updateEvent}
+                onDelete={deleteEvent}
+              />
+            : <WeekView
+                current={current}
+                getEventsForDate={getEventsForDate}
+                onUpdate={updateEvent}
+                onDelete={deleteEvent}
+              />
           }
         </div>
 
       </div>
+
+      {showEventModal && (
+        <EventModal
+          onClose={() => setShowEventModal(false)}
+          onCreate={createEvent}
+        />
+      )}
 
     </div>
   )

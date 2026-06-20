@@ -86,3 +86,26 @@
     font-size: 0.6rem;
   }
 }
+
+.eventPill {
+  width: 100%;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--color-bg);
+  background: var(--gradient-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity var(--transition-fast);
+}
+
+.eventPill:hover {
+  opacity: 0.85;
+}

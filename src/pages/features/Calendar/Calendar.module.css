@@ -88,3 +88,21 @@
     padding: 1rem;
   }
 }
+
+.newEventButton {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--color-bg);
+  background: var(--gradient-accent);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.newEventButton:hover {
+  opacity: 0.88;
+  box-shadow: var(--shadow-glow);
+}
