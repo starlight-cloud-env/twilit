@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase.js'
 import styles from './AuthCallback.module.css'
+import { CheckCircle2, XCircle } from 'lucide-react'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
@@ -72,20 +73,17 @@ export default function AuthCallback() {
         )}
         {status === 'success' && (
           <>
-            <span className={styles.successIcon}>✦</span>
+            <span className={styles.successIcon}><CheckCircle2 size={40} /></span>
             <h1 className={styles.title}>You're signed in</h1>
             <p className={styles.subtitle}>Taking you there now...</p>
           </>
         )}
         {status === 'error' && (
           <>
-            <span className={styles.errorIcon}>✕</span>
+            <span className={styles.errorIcon}><XCircle size={32} /></span>
             <h1 className={styles.title}>Something went wrong</h1>
             <p className={styles.subtitle}>Your link may have expired or already been used.</p>
-            <button
-              className={styles.button}
-              onClick={() => navigate('/signin')}
-            >
+            <button className={styles.button} onClick={() => navigate('/signin')}>
               Try again
             </button>
           </>

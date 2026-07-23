@@ -55,6 +55,9 @@
 }
 
 .dropdownToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text);

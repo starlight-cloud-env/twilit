@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { Bookmark, Lock, Unlock } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import styles from './ServiceCard.module.css'
 
@@ -23,6 +24,8 @@ export default function ServiceCard({ service, isBookmarked, onBookmark }) {
     onBookmark()
   }
 
+  const Icon = service.icon
+
   return (
     <div className={styles.card} onClick={handleCardClick}>
 
@@ -30,7 +33,9 @@ export default function ServiceCard({ service, isBookmarked, onBookmark }) {
       <h3 className={styles.name}>{service.name}</h3>
 
       {/* Icon */}
-      <span className={styles.emoji}>{service.emoji}</span>
+      <span className={styles.icon}>
+        <Icon size={32} strokeWidth={1.75} />
+      </span>
 
       {/* Footer */}
       <div className={styles.footer}>
@@ -42,7 +47,7 @@ export default function ServiceCard({ service, isBookmarked, onBookmark }) {
           aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark this service'}
           title={user ? (isBookmarked ? 'Remove pin' : 'Pin this service') : 'Sign in to pin'}
         >
-          {isBookmarked ? '🔖' : '🏷️'}
+          <Bookmark size={18} fill={isBookmarked ? 'currentColor' : 'none'} />
         </button>
 
         {/* Lock */}
@@ -51,7 +56,7 @@ export default function ServiceCard({ service, isBookmarked, onBookmark }) {
             className={`${styles.iconButton} ${user ? styles.unlocked : styles.locked}`}
             title={user ? 'You have access' : 'Sign in required'}
           >
-            {user ? '🔓' : '🔒'}
+            {user ? <Unlock size={18} /> : <Lock size={18} />}
           </span>
         )}
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from './EventModal.module.css'
+import { X } from 'lucide-react'
 
 const REPEAT_OPTIONS = [
   { value: 'none', label: 'Do Not Repeat' },
@@ -92,7 +93,7 @@ export default function EventModal({ onClose, onCreate, initialDate }) {
 
         <div className={styles.header}>
           <h2 className={styles.title}>New Event</h2>
-          <button className={styles.close} onClick={onClose}>✕</button>
+          <button className={styles.close} onClick={onClose}><X size={18} /></button>
         </div>
 
         <div className={styles.body}>

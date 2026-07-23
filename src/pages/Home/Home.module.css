@@ -21,9 +21,9 @@
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .emptyState {

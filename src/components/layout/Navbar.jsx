@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useTheme } from '../../context/ThemeContext.jsx'
 import styles from './Navbar.module.css'
+import { Palette } from 'lucide-react'
 
 export default function Navbar() {
   const { user, signOut } = useAuth()
@@ -28,7 +29,7 @@ export default function Navbar() {
               onClick={() => setThemeOpen(prev => !prev)}
               aria-label="Switch theme"
             >
-              🎨 {theme.charAt(0).toUpperCase() + theme.slice(1)}
+              <Palette size={16} /> {theme.charAt(0).toUpperCase() + theme.slice(1)}
             </button>
             {themeOpen && (
               <ul className={styles.dropdownMenu}>

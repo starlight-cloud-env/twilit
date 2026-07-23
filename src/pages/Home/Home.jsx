@@ -1,14 +1,16 @@
+import { Star } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useBookmarks } from '../../hooks/useBookmarks.js'
 import Hero from '../../components/layout/Hero.jsx'
 import ServiceCard from '../../components/cards/ServiceCard.jsx'
 import styles from './Home.module.css'
+import { Calendar } from 'lucide-react'
 
 const SERVICES = [
   {
     id: 'calendar',
     name: 'Calendar',
-    emoji: '📅',
+    icon: Calendar,
     category: 'Utility',
     path: '/calendar',
     protected: true,
@@ -29,7 +31,9 @@ export default function Home() {
       {/* Pinned Row */}
       {user && (
         <section className={styles.pinnedSection}>
-          <h2 className={styles.sectionTitle}>⭐ Pinned</h2>
+          <h2 className={styles.sectionTitle}>
+            <Star size={18} fill="currentColor" /> Pinned
+          </h2>
           {pinnedServices.length === 0 ? (
             <p className={styles.emptyState}>
               Pin a service to see it here
