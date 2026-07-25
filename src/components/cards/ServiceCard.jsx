@@ -33,9 +33,9 @@ export default function ServiceCard({ service, isBookmarked, onBookmark }) {
       <h3 className={styles.name}>{service.name}</h3>
 
       {/* Icon */}
-      <span className={styles.icon}>
-        <Icon size={32} strokeWidth={1.75} />
-      </span>
+      <div className={styles.iconWrap}>
+        <Icon size={28} strokeWidth={1.75} />
+      </div>
 
       {/* Footer */}
       <div className={styles.footer}>
