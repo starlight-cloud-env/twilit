@@ -1,10 +1,9 @@
-import { Star } from 'lucide-react'
+import { Calendar, ListChecks, Star } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useBookmarks } from '../../hooks/useBookmarks.js'
 import Hero from '../../components/layout/Hero.jsx'
 import ServiceCard from '../../components/cards/ServiceCard.jsx'
 import styles from './Home.module.css'
-import { Calendar } from 'lucide-react'
 
 const SERVICES = [
   {
@@ -13,6 +12,14 @@ const SERVICES = [
     icon: Calendar,
     category: 'Utility',
     path: '/calendar',
+    protected: true,
+  },
+  {
+    id: 'lists',
+    name: 'Lists',
+    icon: ListChecks,
+    category: 'Utility',
+    path: '/lists',
     protected: true,
   }
 ]
