@@ -1,19 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ListChecks, Plus } from 'lucide-react'
 import { useAuth } from '../../../context/AuthContext.jsx'
 import { useLists } from '../../../hooks/useLists.js'
 import ListCard from './components/ListCard.jsx'
 import NewListModal from './components/NewListModal.jsx'
 import styles from './Lists.module.css'
+import { supabase } from '../../../lib/supabase.js'
 
 export default function Lists() {
   const { user } = useAuth()
   const { lists, loading, createList, deleteList } = useLists()
   const [showNewListModal, setShowNewListModal] = useState(false)
 
-  const { data, error } = await window.supabase?.rpc?.('debug_auth_uid') 
-    ?? (await import('/src/lib/supabase.js')).supabase.rpc('debug_auth_uid')
-  console.log(data, error)
+  useEffect(() => {
+    supabase.rpc('debug_auth_uid').then(({ data, error }) => {
+      console.log('auth.uid() from server:', data, error)
+    })
+  }, [])
 
   return (
     <div className={styles.page}>
