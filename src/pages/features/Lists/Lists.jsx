@@ -11,6 +11,10 @@ export default function Lists() {
   const { lists, loading, createList, deleteList } = useLists()
   const [showNewListModal, setShowNewListModal] = useState(false)
 
+  const { data, error } = await window.supabase?.rpc?.('debug_auth_uid') 
+    ?? (await import('/src/lib/supabase.js')).supabase.rpc('debug_auth_uid')
+  console.log(data, error)
+
   return (
     <div className={styles.page}>
 

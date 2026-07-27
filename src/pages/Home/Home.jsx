@@ -32,10 +32,6 @@ export default function Home() {
 
   const categories = [...new Set(SERVICES.map(s => s.category))]
 
-  const { data, error } = await window.supabase?.rpc?.('debug_auth_uid') 
-    ?? (await import('/src/lib/supabase.js')).supabase.rpc('debug_auth_uid')
-  console.log(data, error)
-
   return (
     <div className={styles.page}>
 
