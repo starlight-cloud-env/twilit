@@ -32,6 +32,18 @@ export default function Home() {
 
   const categories = [...new Set(SERVICES.map(s => s.category))]
 
+  const mod = await import('/src/lib/supabase.js')
+  const supabase = mod.supabase
+  const { data: { session } } = await supabase.auth.getSession()
+
+  const { data, error } = await supabase
+    .from('rls_test')
+    .insert([{ owner_id: session.user.id, note: 'hello' }])
+    .select()
+
+  console.log('data:', data)
+  console.log('error:', error)
+
   return (
     <div className={styles.page}>
 
