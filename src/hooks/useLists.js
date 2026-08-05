@@ -30,15 +30,16 @@ export function useLists() {
   }
 
   const createList = async (listData) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('lists')
       .insert([{ ...listData, owner_id: user.id }])
-      .select()
 
-    if (!error && data) {
-      setLists(prev => [data[0], ...prev])
+    if (error) {
+      return { error }
     }
-    return { data: data?.[0], error }
+
+    await fetchLists()
+    return { error: null }
   }
 
   const updateList = async (id, updates) => {
