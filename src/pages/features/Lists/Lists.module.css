@@ -6,6 +6,27 @@
   gap: 1.5rem;
 }
 
+.invitesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.invitesTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.invitesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
 .toolbar {
   display: flex;
   align-items: center;

@@ -1,25 +1,44 @@
-import { useState, useEffect } from 'react'
-import { ListChecks, Plus } from 'lucide-react'
+import { useState } from 'react'
+import { ListChecks, Plus, Mail } from 'lucide-react'
 import { useAuth } from '../../../context/AuthContext.jsx'
 import { useLists } from '../../../hooks/useLists.js'
+import { usePendingInvites } from '../../../hooks/usePendingInvites.js'
 import ListCard from './components/ListCard.jsx'
 import NewListModal from './components/NewListModal.jsx'
+import PendingInviteCard from './components/PendingInviteCard.jsx'
 import styles from './Lists.module.css'
-import { supabase } from '../../../lib/supabase.js'
 
 export default function Lists() {
   const { user } = useAuth()
-  const { lists, loading, createList, deleteList } = useLists()
+  const { lists, loading, createList, deleteList, fetchLists } = useLists()
+  const { invites, acceptInvite, declineInvite } = usePendingInvites()
   const [showNewListModal, setShowNewListModal] = useState(false)
 
-  useEffect(() => {
-    supabase.rpc('debug_auth_uid').then(({ data, error }) => {
-      console.log('auth.uid() from server:', data, error)
-    })
-  }, [])
+  const handleAccept = async (inviteId) => {
+    const { error } = await acceptInvite(inviteId)
+    if (!error) fetchLists()
+  }
 
   return (
     <div className={styles.page}>
+
+      {invites.length > 0 && (
+        <section className={styles.invitesSection}>
+          <h2 className={styles.invitesTitle}>
+            <Mail size={16} /> Pending Invites
+          </h2>
+          <div className={styles.invitesList}>
+            {invites.map(invite => (
+              <PendingInviteCard
+                key={invite.id}
+                invite={invite}
+                onAccept={handleAccept}
+                onDecline={declineInvite}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className={styles.toolbar}>
         <h1 className={styles.pageTitle}>Lists</h1>

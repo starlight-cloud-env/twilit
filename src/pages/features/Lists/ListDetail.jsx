@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Pencil, Check, X, Trash2, Plus, ListChecks } from 'lucide-react'
+import { ArrowLeft, Pencil, Check, X, Trash2, Plus, ListChecks, Users } from 'lucide-react'
 import { supabase } from '../../../lib/supabase.js'
 import { useAuth } from '../../../context/AuthContext.jsx'
 import { useListItems } from '../../../hooks/useListItems.js'
 import ListItemRow from './components/ListItemRow.jsx'
+import ShareModal from './components/ShareModal.jsx'
 import styles from './ListDetail.module.css'
 
 const CATEGORY_OPTIONS = ['General', 'Grocery', 'Packing', 'To-Do']
@@ -25,6 +26,7 @@ export default function ListDetail() {
 
   const [confirming, setConfirming] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
 
   const { items, loading: itemsLoading, addItem, toggleItem, deleteItem } = useListItems(id)
   const [newItemText, setNewItemText] = useState('')
@@ -152,6 +154,9 @@ export default function ListDetail() {
             </div>
             {isOwner && (
               <div className={styles.headerActions}>
+                <button className={styles.iconButton} onClick={() => setShowShareModal(true)} title="Share list">
+                  <Users size={16} />
+                </button>
                 <button className={styles.iconButton} onClick={startEditing} title="Rename list">
                   <Pencil size={16} />
                 </button>
@@ -219,6 +224,10 @@ export default function ListDetail() {
         )}
 
       </div>
+
+      {showShareModal && (
+        <ShareModal listId={id} onClose={() => setShowShareModal(false)} />
+      )}
 
     </div>
   )
