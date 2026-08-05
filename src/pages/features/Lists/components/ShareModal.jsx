@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { X, Mail, Trash2, Clock, CheckCircle2 } from 'lucide-react'
-import { useListMembers } from '../../../hooks/useListMembers.js'
+import { useListMembers } from '../../../../hooks/useListMembers.js'
 import styles from './ShareModal.module.css'
 
 export default function ShareModal({ listId, onClose }) {
