@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Pencil, Check, X, Trash2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Check, X, Trash2, Plus, ListChecks } from 'lucide-react'
 import { supabase } from '../../../lib/supabase.js'
 import { useAuth } from '../../../context/AuthContext.jsx'
+import { useListItems } from '../../../hooks/useListItems.js'
+import ListItemRow from './components/ListItemRow.jsx'
 import styles from './ListDetail.module.css'
 
 const CATEGORY_OPTIONS = ['General', 'Grocery', 'Packing', 'To-Do']
@@ -23,6 +25,10 @@ export default function ListDetail() {
 
   const [confirming, setConfirming] = useState(false)
   const [deleting, setDeleting] = useState(false)
+
+  const { items, loading: itemsLoading, addItem, toggleItem, deleteItem } = useListItems(id)
+  const [newItemText, setNewItemText] = useState('')
+  const [addingItem, setAddingItem] = useState(false)
 
   useEffect(() => {
     fetchList()
@@ -57,15 +63,14 @@ export default function ListDetail() {
   const handleSave = async () => {
     if (!nameDraft.trim()) return
     setSaving(true)
-    const { data, error } = await supabase
+    const updates = { name: nameDraft.trim(), category: categoryDraft }
+    const { error } = await supabase
       .from('lists')
-      .update({ name: nameDraft.trim(), category: categoryDraft })
+      .update(updates)
       .eq('id', id)
-      .select()
-      .maybeSingle()
 
-    if (!error && data) {
-      setList(data)
+    if (!error) {
+      setList(prev => ({ ...prev, ...updates }))
       setEditing(false)
     }
     setSaving(false)
@@ -79,6 +84,17 @@ export default function ListDetail() {
     } else {
       setDeleting(false)
     }
+  }
+
+  const handleAddItem = async (e) => {
+    e.preventDefault()
+    if (!newItemText.trim() || addingItem) return
+    setAddingItem(true)
+    const text = newItemText
+    setNewItemText('')
+    const { error } = await addItem(text)
+    if (error) setNewItemText(text)
+    setAddingItem(false)
   }
 
   if (loading) {
@@ -160,10 +176,48 @@ export default function ListDetail() {
         )}
       </div>
 
-      <div className={styles.itemsPlaceholder}>
-        <p className={styles.stateText}>
-          Items are coming in the next phase — for now, this list exists and can be renamed or shared.
-        </p>
+      <div className={styles.itemsSection}>
+
+        <form className={styles.addItemForm} onSubmit={handleAddItem}>
+          <input
+            className={styles.addItemInput}
+            type="text"
+            placeholder="Add an item..."
+            value={newItemText}
+            onChange={e => setNewItemText(e.target.value)}
+          />
+          <button
+            type="submit"
+            className={styles.addItemButton}
+            disabled={!newItemText.trim() || addingItem}
+            aria-label="Add item"
+          >
+            <Plus size={18} />
+          </button>
+        </form>
+
+        {itemsLoading ? (
+          <p className={styles.stateText}>Loading items...</p>
+        ) : items.length === 0 ? (
+          <div className={styles.itemsEmptyState}>
+            <ListChecks size={32} strokeWidth={1.5} />
+            <p className={styles.stateText}>No items yet — add your first one above.</p>
+          </div>
+        ) : (
+          <div className={styles.itemsList}>
+            {[...items]
+              .sort((a, b) => Number(a.is_checked) - Number(b.is_checked))
+              .map(item => (
+                <ListItemRow
+                  key={item.id}
+                  item={item}
+                  onToggle={toggleItem}
+                  onDelete={deleteItem}
+                />
+              ))}
+          </div>
+        )}
+
       </div>
 
     </div>

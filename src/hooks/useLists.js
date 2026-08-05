@@ -43,16 +43,17 @@ export function useLists() {
   }
 
   const updateList = async (id, updates) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('lists')
       .update(updates)
       .eq('id', id)
-      .select()
 
-    if (!error && data) {
-      setLists(prev => prev.map(l => (l.id === id ? data[0] : l)))
+    if (error) {
+      return { error }
     }
-    return { data: data?.[0], error }
+
+    setLists(prev => prev.map(l => (l.id === id ? { ...l, ...updates } : l)))
+    return { error: null }
   }
 
   const deleteList = async (id) => {
