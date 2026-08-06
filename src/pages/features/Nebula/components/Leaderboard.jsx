@@ -9,7 +9,7 @@ export default function Leaderboard({ leaderboard, loading, personalBest, fetchL
 
   useEffect(() => {
     if (user) fetchLeaderboard()
-  }, [user])
+    }, [user, personalBest])
 
   if (!user) {
     return (
