@@ -1,4 +1,4 @@
-import { Wrench, Sparkles } from 'lucide-react'
+import { Wrench, Sparkles, Gamepad2 } from 'lucide-react'
 import styles from './Hero.module.css'
 
 const HERO_CONTENT = {
@@ -6,6 +6,11 @@ const HERO_CONTENT = {
     title: 'Utility',
     description: 'Tools and services to help you stay organized and get things done.',
     icon: Wrench,
+  },
+  Games: {
+    title: 'Games',
+    description: 'A little something to play with, no purpose required.',
+    icon: Gamepad2,
   }
 }
 

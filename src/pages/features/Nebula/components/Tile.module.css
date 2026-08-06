@@ -1,0 +1,46 @@
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 700;
+  z-index: 1;
+  padding: 0.25rem;
+  text-align: center;
+}
+
+.label {
+  font-size: clamp(0.55rem, 2.4vw, 0.75rem);
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.glow {
+  box-shadow: 0 0 18px currentColor;
+}
+
+.spawn {
+  animation: spawnPop 220ms ease;
+}
+
+.merged {
+  animation: mergePop 220ms ease;
+}
+
+@keyframes spawnPop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes mergePop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spawn,
+  .merged {
+    animation: none;
+  }
+}

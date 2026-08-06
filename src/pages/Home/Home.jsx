@@ -1,4 +1,4 @@
-import { Calendar, ListChecks, Star } from 'lucide-react'
+import { Calendar, ListChecks, Star, Gamepad2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useBookmarks } from '../../hooks/useBookmarks.js'
 import Hero from '../../components/layout/Hero.jsx'
@@ -21,6 +21,14 @@ const SERVICES = [
     category: 'Utility',
     path: '/lists',
     protected: true,
+  },
+  {
+    id: 'nebula',
+    name: 'Nebula',
+    icon: Gamepad2,
+    category: 'Games',
+    path: '/nebula',
+    protected: false,
   }
 ]
 
