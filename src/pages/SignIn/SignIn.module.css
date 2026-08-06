@@ -1,3 +1,69 @@
+.page {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 520px;
+  height: 520px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+  opacity: 0.12;
+  filter: blur(40px);
+  pointer-events: none;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+
+.card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  animation: cardIn 400ms var(--transition-bounce) both;
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  color: var(--color-accent);
+  margin-bottom: 0.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  text-align: center;
+  margin-top: -0.5rem;
+}
+
 .googleButton {
   width: 100%;
   display: flex;
@@ -5,6 +71,7 @@
   justify-content: center;
   gap: 0.65rem;
   padding: 0.75rem;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: inherit;
@@ -13,10 +80,59 @@
   border: 1px solid #dadce0;
   border-radius: 8px;
   cursor: pointer;
-  transition: box-shadow 250ms ease, background 250ms ease;
+  transition: box-shadow 250ms ease, background 250ms ease, transform 150ms ease;
 }
 
 .googleButton:hover {
   background: #f8f9fa;
   box-shadow: var(--shadow-glow);
+}
+
+.googleButton:active {
+  transform: scale(0.98);
+}
+
+.googleButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.back {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: color 250ms ease;
+  font-family: inherit;
+}
+
+.back:hover {
+  color: var(--color-accent);
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes drift {
+  from { transform: translate(-50%, -50%) scale(1); }
+  to   { transform: translate(-52%, -48%) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+  .glow {
+    animation: none;
+  }
 }

@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { Sparkles } from 'lucide-react'
 import { supabase } from '../../lib/supabase.js'
 import styles from './SignIn.module.css'
 
@@ -19,7 +20,13 @@ export default function SignIn() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.glow} aria-hidden="true" />
+
       <div className={styles.card}>
+
+        <span className={styles.mark}>
+          <Sparkles size={22} strokeWidth={1.75} />
+        </span>
 
         <h1 className={styles.title}>Welcome to Twilit</h1>
         <p className={styles.subtitle}>
