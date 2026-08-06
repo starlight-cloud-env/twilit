@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { useNebulaGame } from '../../../hooks/useNebulaGame.js'
+import { usePuzzleScore } from '../../../hooks/usePuzzleScore.js'
+import { tierVisual } from './tiers.js'
 import Tile from './components/Tile.jsx'
+import Leaderboard from './components/Leaderboard.jsx'
 import styles from './Nebula.module.css'
 
 const KEY_DIRECTIONS = {
@@ -13,8 +16,13 @@ const KEY_DIRECTIONS = {
 const SWIPE_THRESHOLD = 30
 
 export default function Nebula() {
-  const { grid, score, status, handleMove, reset, continuePlaying } = useNebulaGame()
+  const { grid, score, status, highestTierIndex, handleMove, reset, continuePlaying } = useNebulaGame()
+  const { personalBest, leaderboard, leaderboardLoading, fetchLeaderboard, submitScoreIfBetter } = usePuzzleScore()
   const touchStart = useRef(null)
+
+  useEffect(() => {
+    submitScoreIfBetter(score, tierVisual(highestTierIndex).label)
+  }, [score])
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -106,6 +114,13 @@ export default function Nebula() {
       </button>
 
       <p className={styles.hint}>Use arrow keys, WASD, or swipe to play</p>
+
+      <Leaderboard
+        leaderboard={leaderboard}
+        loading={leaderboardLoading}
+        personalBest={personalBest}
+        fetchLeaderboard={fetchLeaderboard}
+      />
 
     </div>
   )
