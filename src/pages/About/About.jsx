@@ -58,9 +58,11 @@ export default function About() {
         <h2 className={styles.sectionTitle}>What's Next</h2>
         <PlaceholderNote>
           Roadmap:
-          » Astroids-style game that uses a Break-out style system
-          » Pinball game
-          » Location Finder
+          <ul>
+            <li>» Astroids-style game that uses a Break-out style system</li>
+            <li>» Pinball game</li>
+            <li>» Location Finder</li>
+          </ul>
         </PlaceholderNote>
       </section>
 
