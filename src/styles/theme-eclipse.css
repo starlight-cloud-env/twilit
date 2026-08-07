@@ -11,7 +11,7 @@
   --color-success:    #6bffb8;
 
   /* Gradients */
-  --gradient-main:   linear-gradient(135deg, #141414 0%, #0e0e0e 50%, #080808 100%);
+  --gradient-main:   linear-gradient(135deg, var(--color-surface) 0%, color-mix(in srgb, var(--color-surface) 45%, var(--color-bg) 55%) 100%);
   --gradient-accent: linear-gradient(135deg, #ffd700 0%, #6b5c00 100%);
   --gradient-hero:   linear-gradient(to right, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.6) 50%, rgba(8,8,8,0.1) 100%);
 
