@@ -29,7 +29,7 @@ export default function Navbar() {
               onClick={() => setThemeOpen(prev => !prev)}
               aria-label="Switch theme"
             >
-              <Palette size={16} /> {theme.charAt(0).toUpperCase() + theme.slice(1)}
+              <Palette size={16} /> <span className={styles.themeLabel}>{theme.charAt(0).toUpperCase() + theme.slice(1)}</span>
             </button>
             {themeOpen && (
               <ul className={styles.dropdownMenu}>

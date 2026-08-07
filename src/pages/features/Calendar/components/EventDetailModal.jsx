@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { X } from 'lucide-react'
 import styles from './EventDetailModal.module.css'
 
 const REPEAT_OPTIONS = [
@@ -76,7 +77,7 @@ export default function EventDetailModal({ event, onClose, onUpdate, onDelete })
           <h2 className={styles.title}>
             {editing ? 'Edit Event' : event.title}
           </h2>
-          <button className={styles.close} onClick={onClose}>✕</button>
+          <button className={styles.close} onClick={onClose}><X size={18} /></button>
         </div>
 
         <div className={styles.body}>

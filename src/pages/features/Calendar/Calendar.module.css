@@ -87,6 +87,15 @@
   .canvas {
     padding: 1rem;
   }
+
+  .toolbarLeft {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .newEventButton {
+    padding: 0.4rem 0.8rem;
+  }
 }
 
 .newEventButton {

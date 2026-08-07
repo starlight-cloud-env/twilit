@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { ChevronUp, ChevronDown } from 'lucide-react'
 import ViewSwitcher from './ViewSwitcher.jsx'
 import JumpToDate from './JumpToDate.jsx'
 import styles from './Panel.module.css'
@@ -30,7 +31,7 @@ export default function Panel({ view, onViewChange, onJump }) {
           aria-label="Toggle panel"
         >
           <span className={styles.drawerIcon}>
-            {drawerOpen ? '⌄' : '⌃'}
+            {drawerOpen ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
           </span>
           <span className={styles.drawerLabel}>
             {drawerOpen ? 'Close' : 'Options'}

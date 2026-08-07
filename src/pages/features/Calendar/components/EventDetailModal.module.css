@@ -41,7 +41,7 @@
 }
 
 .close {
-  font-size: 0.9rem;
+  display: flex;
   color: var(--color-muted);
   background: none;
   border: none;

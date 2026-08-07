@@ -103,3 +103,26 @@
   color: var(--color-accent);
   font-weight: 600;
 }
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+
+  .brand {
+    font-size: 1.25rem;
+  }
+
+  .controls {
+    gap: 0.5rem;
+  }
+
+  .authButton,
+  .dropdownToggle {
+    padding: 0.4rem 0.7rem;
+  }
+
+  .themeLabel {
+    display: none;
+  }
+}
