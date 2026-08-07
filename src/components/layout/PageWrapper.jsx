@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Navbar from './Navbar.jsx'
+import Footer from './Footer.jsx'
 import styles from './PageWrapper.module.css'
 
 export default function PageWrapper() {
@@ -9,6 +10,7 @@ export default function PageWrapper() {
       <main className={styles.main}>
         <Outlet />
       </main>
+      <Footer />
     </div>
   )
 }

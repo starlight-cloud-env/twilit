@@ -7,6 +7,7 @@ import Calendar from '../pages/features/Calendar/Calendar.jsx'
 import Lists from '../pages/features/Lists/Lists.jsx'
 import ListDetail from '../pages/features/Lists/ListDetail.jsx'
 import Nebula from '../pages/features/Nebula/Nebula.jsx'
+import About from '../pages/About/About.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
 
 export default function AppRoutes() {
@@ -19,6 +20,7 @@ export default function AppRoutes() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/nebula" element={<Nebula />} />
+        <Route path="/about" element={<About />} />
 
         {/* Protected routes */}
         <Route
