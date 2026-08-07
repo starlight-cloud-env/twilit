@@ -25,13 +25,14 @@ export default function About() {
 
       <header className={styles.header}>
         <h1 className={styles.title}>About Twilit</h1>
-        <p className={styles.tagline}>Replace this with a one-line tagline for the project.</p>
+        <p className={styles.tagline}>"Brendan-Built" tools and games, all under one sky.</p>
       </header>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>What is this?</h2>
         <PlaceholderNote>
-          Write a short intro here — what Twilit is, who it's for, and why you built it.
+          Welcome to Twilit, this site serves as both a demonstration of what I can build and design, as well as serve a practical purpose for friends and family.
+          Here, I plan on adding requested-of-me services so that there is a dedicated platform to host and display my work, as well as bring some form of joy to them.
         </PlaceholderNote>
       </section>
 
@@ -44,25 +45,28 @@ export default function About() {
         </div>
       </section>
 
+      {/* 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Design & Engineering Notes</h2>
         <PlaceholderNote>
-          A good spot for a few standout decisions or lessons learned — e.g. how sharing/permissions
-          were modeled, working through Row-Level Security edge cases, building the theme system,
-          or designing the Nebula game engine from scratch.
+          
         </PlaceholderNote>
       </section>
+      */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>What's Next</h2>
         <PlaceholderNote>
-          Roadmap items, or things you'd improve with more time — shows you think past "done."
+          Roadmap:
+          » Astroids-style game that uses a Break-out style system
+          » Pinball game
+          » Location Finder
         </PlaceholderNote>
       </section>
 
       <footer className={styles.footer}>
         <PlaceholderNote>
-          Add links here — GitHub repo, LinkedIn, resume, whatever's relevant.
+          Add links here
         </PlaceholderNote>
       </footer>
 
