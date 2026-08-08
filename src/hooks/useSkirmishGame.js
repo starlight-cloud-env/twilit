@@ -52,6 +52,8 @@ function freshGameState() {
     formationDropY: 0,
     keys: { left: false, right: false },
     targetPaddleX: null,
+    inputMode: 'pointer',
+    targetPaddleX: null,
     frame: 0,
     mysteryShip: null,
     mysteryShipTimer: randomSpawnDelay(),
@@ -130,6 +132,7 @@ export function useSkirmishGame() {
     const canvasX = (clientX - rect.left) * (CANVAS_WIDTH / rect.width)
     const width = effectivePaddleWidth(gameRef.current)
     gameRef.current.targetPaddleX = canvasX - width / 2
+    gameRef.current.inputMode = 'pointer'
   }, [])
 
   // ---------- input ----------
@@ -143,8 +146,8 @@ export function useSkirmishGame() {
     }
     const onPointerDown = () => launch()
     const onKeyDown = (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); gameRef.current.keys.left = true }
-      if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); gameRef.current.keys.right = true }
+      if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); gameRef.current.keys.left = true; gameRef.current.inputMode = 'keyboard' }
+      if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); gameRef.current.keys.right = true; gameRef.current.inputMode = 'keyboard' }
       if (e.key === ' ') { e.preventDefault(); launch() }
     }
     const onKeyUp = (e) => {
@@ -221,10 +224,10 @@ export function useSkirmishGame() {
       game.frame++
       const paddleWidth = effectivePaddleWidth(game)
 
-      // Paddle — keyboard takes priority when held, otherwise follow
-      // the pointer. Applying both every frame caused the pointer's last
-      // known position to overwrite keyboard movement each frame.
-      if (game.keys.left || game.keys.right) {
+      // Paddle — whichever input was used most recently stays in control.
+      // Releasing keys no longer snaps back to a stale mouse position;
+      // the pointer only regains control when it actually moves again.
+      if (game.inputMode === 'keyboard') {
         if (game.keys.left) game.paddle.x -= PADDLE_SPEED
         if (game.keys.right) game.paddle.x += PADDLE_SPEED
       } else if (game.targetPaddleX !== null) {
