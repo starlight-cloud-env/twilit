@@ -143,8 +143,8 @@ export function useSkirmishGame() {
     }
     const onPointerDown = () => launch()
     const onKeyDown = (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') gameRef.current.keys.left = true
-      if (e.key === 'ArrowRight' || e.key === 'd') gameRef.current.keys.right = true
+      if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); gameRef.current.keys.left = true }
+      if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); gameRef.current.keys.right = true }
       if (e.key === ' ') { e.preventDefault(); launch() }
     }
     const onKeyUp = (e) => {
@@ -221,12 +221,15 @@ export function useSkirmishGame() {
       game.frame++
       const paddleWidth = effectivePaddleWidth(game)
 
-      // Paddle
-      if (game.targetPaddleX !== null) {
+      // Paddle — keyboard takes priority when held, otherwise follow
+      // the pointer. Applying both every frame caused the pointer's last
+      // known position to overwrite keyboard movement each frame.
+      if (game.keys.left || game.keys.right) {
+        if (game.keys.left) game.paddle.x -= PADDLE_SPEED
+        if (game.keys.right) game.paddle.x += PADDLE_SPEED
+      } else if (game.targetPaddleX !== null) {
         game.paddle.x = game.targetPaddleX
       }
-      if (game.keys.left) game.paddle.x -= PADDLE_SPEED
-      if (game.keys.right) game.paddle.x += PADDLE_SPEED
       game.paddle.x = Math.max(0, Math.min(CANVAS_WIDTH - paddleWidth, game.paddle.x))
 
       // Alien formation drift
