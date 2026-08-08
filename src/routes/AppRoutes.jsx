@@ -7,6 +7,8 @@ import Calendar from '../pages/features/Calendar/Calendar.jsx'
 import Lists from '../pages/features/Lists/Lists.jsx'
 import ListDetail from '../pages/features/Lists/ListDetail.jsx'
 import Nebula from '../pages/features/Nebula/Nebula.jsx'
+import Bills from '../pages/features/Bills/Bills.jsx'
+import BillDetail from '../pages/features/Bills/BillDetail.jsx'
 import About from '../pages/About/About.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
 
@@ -44,6 +46,22 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <ListDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bills"
+          element={
+            <ProtectedRoute>
+              <Bills />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bills/:id"
+          element={
+            <ProtectedRoute>
+              <BillDetail />
             </ProtectedRoute>
           }
         />
