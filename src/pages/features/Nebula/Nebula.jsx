@@ -20,9 +20,23 @@ export default function Nebula() {
   const { personalBest, leaderboard, leaderboardLoading, fetchLeaderboard, submitScoreIfBetter } = usePuzzleScore()
   const touchStart = useRef(null)
 
+  // Debounced so rapid merge chains don't fire overlapping network
+  // requests that can resolve out of order and silently overwrite a
+  // higher score with a stale lower one.
   useEffect(() => {
-    submitScoreIfBetter(score, tierVisual(highestTierIndex).label)
+    const timer = setTimeout(() => {
+      submitScoreIfBetter(score, tierVisual(highestTierIndex).label)
+    }, 600)
+    return () => clearTimeout(timer)
   }, [score])
+
+  // Guaranteed final write the instant the game actually ends — nothing
+  // else can change score after this, so it can't race with anything.
+  useEffect(() => {
+    if (status === 'lost') {
+      submitScoreIfBetter(score, tierVisual(highestTierIndex).label)
+    }
+  }, [status])
 
   useEffect(() => {
     const onKeyDown = (e) => {

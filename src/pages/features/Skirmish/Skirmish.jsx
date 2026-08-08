@@ -9,9 +9,23 @@ export default function Skirmish() {
   const { canvasRef, score, lives, wave, status, launch, reset, canvasWidth, canvasHeight } = useSkirmishGame()
   const { personalBest, leaderboard, leaderboardLoading, fetchLeaderboard, submitScoreIfBetter } = useSkirmishScore()
 
+  // Debounced so a fast multi-kill streak doesn't fire overlapping network
+  // requests that can resolve out of order and silently overwrite a
+  // higher score with a stale lower one.
   useEffect(() => {
-    submitScoreIfBetter(score, wave)
+    const timer = setTimeout(() => {
+      submitScoreIfBetter(score, wave)
+    }, 600)
+    return () => clearTimeout(timer)
   }, [score])
+
+  // Guaranteed final write the instant the game actually ends — nothing
+  // else can change score after this, so it can't race with anything.
+  useEffect(() => {
+    if (status === 'lost') {
+      submitScoreIfBetter(score, wave)
+    }
+  }, [status])
 
   return (
     <div className={styles.page}>
@@ -83,4 +97,4 @@ export default function Skirmish() {
 
     </div>
   )
-}
+}0
