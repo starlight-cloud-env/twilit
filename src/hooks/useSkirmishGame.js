@@ -364,4 +364,75 @@ export function useSkirmishGame() {
 
     const draw = () => {
       const game = gameRef.current
-      const
+      const paddleWidth = effectivePaddleWidth(game)
+
+      ctx.fillStyle = COLORS.background
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+
+      // Aliens
+      for (const alien of game.aliens) {
+        if (!alien.alive) continue
+        const rect = alienRect(alien, game)
+        ctx.fillStyle = ALIEN_TIERS[alien.row].color
+        ctx.beginPath()
+        ctx.roundRect(rect.x, rect.y, rect.width, rect.height, 4)
+        ctx.fill()
+      }
+
+      // Mystery ship
+      if (game.mysteryShip) {
+        ctx.fillStyle = MYSTERY_SHIP_COLOR
+        ctx.shadowColor = MYSTERY_SHIP_COLOR
+        ctx.shadowBlur = 8
+        ctx.beginPath()
+        ctx.roundRect(game.mysteryShip.x, game.mysteryShip.y, MYSTERY_SHIP_WIDTH, MYSTERY_SHIP_HEIGHT, 9)
+        ctx.fill()
+        ctx.shadowBlur = 0
+      }
+
+      // Power-ups
+      for (const p of game.powerUps) {
+        ctx.fillStyle = POWERUP_COLORS[p.type]
+        ctx.beginPath()
+        ctx.roundRect(p.x - POWERUP_SIZE / 2, p.y, POWERUP_SIZE, POWERUP_SIZE, 5)
+        ctx.fill()
+        ctx.fillStyle = COLORS.background
+        ctx.font = 'bold 12px Inter, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(POWERUP_LABELS[p.type], p.x, p.y + POWERUP_SIZE / 2 + 1)
+      }
+
+      // Paddle
+      ctx.fillStyle = COLORS.paddle
+      ctx.shadowColor = COLORS.paddleGlow
+      ctx.shadowBlur = 10
+      ctx.beginPath()
+      ctx.roundRect(game.paddle.x, PADDLE_Y, paddleWidth, PADDLE_HEIGHT, 6)
+      ctx.fill()
+      ctx.shadowBlur = 0
+
+      // Balls
+      ctx.fillStyle = COLORS.ball
+      for (const ball of game.balls) {
+        ctx.beginPath()
+        ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+
+    const loop = () => {
+      update()
+      draw()
+      rafRef.current = requestAnimationFrame(loop)
+    }
+    rafRef.current = requestAnimationFrame(loop)
+
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      clearTimeout(waveClearTimerRef.current)
+    }
+  }, [])
+
+  return { canvasRef, score, lives, wave, status, launch, reset, canvasWidth: CANVAS_WIDTH, canvasHeight: CANVAS_HEIGHT }
+}
