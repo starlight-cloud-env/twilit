@@ -1,9 +1,17 @@
+import { useEffect } from 'react'
 import { Heart, RotateCcw } from 'lucide-react'
 import { useSkirmishGame } from '../../../hooks/useSkirmishGame.js'
+import { useSkirmishScore } from '../../../hooks/useSkirmishScore.js'
+import Leaderboard from './components/Leaderboard.jsx'
 import styles from './Skirmish.module.css'
 
 export default function Skirmish() {
   const { canvasRef, score, lives, wave, status, launch, reset, canvasWidth, canvasHeight } = useSkirmishGame()
+  const { personalBest, leaderboard, leaderboardLoading, fetchLeaderboard, submitScoreIfBetter } = useSkirmishScore()
+
+  useEffect(() => {
+    submitScoreIfBetter(score, wave)
+  }, [score])
 
   return (
     <div className={styles.page}>
@@ -65,6 +73,13 @@ export default function Skirmish() {
       </div>
 
       <p className={styles.hint}>Move the mouse, drag your finger, or use arrow keys — Space or tap to launch</p>
+
+      <Leaderboard
+        leaderboard={leaderboard}
+        loading={leaderboardLoading}
+        personalBest={personalBest}
+        fetchLeaderboard={fetchLeaderboard}
+      />
 
     </div>
   )
