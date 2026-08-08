@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 
@@ -7,6 +7,7 @@ export function usePuzzleScore() {
   const [personalBest, setPersonalBest] = useState(0)
   const [leaderboard, setLeaderboard] = useState([])
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
+  const fetchSeqRef = useRef(0)
 
   useEffect(() => {
     if (!user) {
@@ -26,8 +27,11 @@ export function usePuzzleScore() {
     setPersonalBest(data?.score ?? 0)
   }
 
+  // Sequence-guarded so an older, slower request can't overwrite a
+  // newer one just because its response happens to arrive later.
   const fetchLeaderboard = useCallback(async () => {
     if (!user) return
+    const seq = ++fetchSeqRef.current
     setLeaderboardLoading(true)
 
     const { data, error } = await supabase
@@ -35,6 +39,8 @@ export function usePuzzleScore() {
       .select('score, highest_tile, user_id, profiles(email)')
       .order('score', { ascending: false })
       .limit(10)
+
+    if (seq !== fetchSeqRef.current) return // superseded by a newer fetch
 
     if (!error && data) setLeaderboard(data)
     setLeaderboardLoading(false)
@@ -58,9 +64,12 @@ export function usePuzzleScore() {
         { onConflict: 'user_id' }
       )
 
-    if (!error) {
-      setPersonalBest(score)
+    if (error) {
+      console.error('Failed to submit Nebula score:', error)
+      return
     }
+
+    setPersonalBest(score)
   }
 
   return {
