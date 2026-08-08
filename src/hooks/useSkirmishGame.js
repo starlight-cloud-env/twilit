@@ -6,6 +6,11 @@ import {
   ALIEN_ROWS, ALIEN_COLS, ALIEN_WIDTH, ALIEN_HEIGHT, ALIEN_SPACING,
   ALIEN_GRID_WIDTH, ALIEN_TOP_Y, BASE_ALIEN_SPEED, MAX_ALIEN_SPEED, ROW_DROP_HEIGHT,
   STARTING_LIVES, ALIEN_TIERS, COLORS,
+  MYSTERY_SHIP_Y, MYSTERY_SHIP_WIDTH, MYSTERY_SHIP_HEIGHT, MYSTERY_SHIP_SPEED,
+  MYSTERY_SHIP_POINTS, MYSTERY_SHIP_SPAWN_MIN_FRAMES, MYSTERY_SHIP_SPAWN_MAX_FRAMES,
+  MYSTERY_SHIP_COLOR,
+  POWERUP_DROP_CHANCE, POWERUP_SIZE, POWERUP_FALL_SPEED,
+  POWERUP_WIDE_DURATION_FRAMES, POWERUP_WIDE_MULTIPLIER, POWERUP_COLORS, POWERUP_LABELS,
 } from '../pages/features/Skirmish/constants.js'
 
 function createAlienGrid() {
@@ -18,9 +23,9 @@ function createAlienGrid() {
   return aliens
 }
 
-function createBall(paddleX) {
+function createBall(paddleX, paddleWidth) {
   return {
-    x: paddleX + PADDLE_WIDTH / 2,
+    x: paddleX + paddleWidth / 2,
     y: PADDLE_Y - BALL_RADIUS - 1,
     vx: 0,
     vy: 0,
@@ -28,11 +33,17 @@ function createBall(paddleX) {
   }
 }
 
+function randomSpawnDelay() {
+  return Math.floor(
+    MYSTERY_SHIP_SPAWN_MIN_FRAMES + Math.random() * (MYSTERY_SHIP_SPAWN_MAX_FRAMES - MYSTERY_SHIP_SPAWN_MIN_FRAMES)
+  )
+}
+
 function freshGameState() {
   const paddleX = CANVAS_WIDTH / 2 - PADDLE_WIDTH / 2
   return {
     paddle: { x: paddleX },
-    balls: [createBall(paddleX)],
+    balls: [createBall(paddleX, PADDLE_WIDTH)],
     aliens: createAlienGrid(),
     alienOffsetX: (CANVAS_WIDTH - ALIEN_GRID_WIDTH) / 2,
     alienDirection: 1,
@@ -41,6 +52,11 @@ function freshGameState() {
     formationDropY: 0,
     keys: { left: false, right: false },
     targetPaddleX: null,
+    frame: 0,
+    mysteryShip: null,
+    mysteryShipTimer: randomSpawnDelay(),
+    powerUps: [],
+    paddleWideUntilFrame: 0,
   }
 }
 
@@ -50,6 +66,25 @@ function alienRect(alien, game) {
     y: ALIEN_TOP_Y + alien.row * (ALIEN_HEIGHT + ALIEN_SPACING) + game.formationDropY,
     width: ALIEN_WIDTH,
     height: ALIEN_HEIGHT,
+  }
+}
+
+function effectivePaddleWidth(game) {
+  return game.frame < game.paddleWideUntilFrame ? PADDLE_WIDTH * POWERUP_WIDE_MULTIPLIER : PADDLE_WIDTH
+}
+
+function applyPowerUp(game, type) {
+  if (type === 'wide') {
+    game.paddleWideUntilFrame = game.frame + POWERUP_WIDE_DURATION_FRAMES
+  } else if (type === 'multiball') {
+    const launchedBalls = game.balls.filter(b => b.launched)
+    const base = launchedBalls[0]
+    if (base) {
+      game.balls.push(
+        { x: base.x, y: base.y, vx: base.vx + 1.6, vy: base.vy, launched: true },
+        { x: base.x, y: base.y, vx: base.vx - 1.6, vy: base.vy, launched: true },
+      )
+    }
   }
 }
 
@@ -93,7 +128,8 @@ export function useSkirmishGame() {
     if (!canvas) return
     const rect = canvas.getBoundingClientRect()
     const canvasX = (clientX - rect.left) * (CANVAS_WIDTH / rect.width)
-    gameRef.current.targetPaddleX = canvasX - PADDLE_WIDTH / 2
+    const width = effectivePaddleWidth(gameRef.current)
+    gameRef.current.targetPaddleX = canvasX - width / 2
   }, [])
 
   // ---------- input ----------
@@ -146,7 +182,7 @@ export function useSkirmishGame() {
 
     const handleMiss = (game) => {
       game.formationDropY += ROW_DROP_HEIGHT
-      game.balls = [createBall(game.paddle.x)]
+      game.balls = [createBall(game.paddle.x, effectivePaddleWidth(game))]
 
       setLives(prev => {
         const next = prev - 1
@@ -172,7 +208,7 @@ export function useSkirmishGame() {
         game.alienDirection = 1
         game.alienSpeed = Math.min(game.alienSpeed * 1.08, MAX_ALIEN_SPEED)
         game.ballSpeed = Math.min(game.ballSpeed * 1.04, MAX_BALL_SPEED)
-        game.balls = [createBall(game.paddle.x)]
+        game.balls = [createBall(game.paddle.x, effectivePaddleWidth(game))]
         setWave(w => w + 1)
         setStatus('playing')
       }, 1400)
@@ -182,13 +218,16 @@ export function useSkirmishGame() {
       const game = gameRef.current
       if (statusRef.current !== 'playing') return
 
+      game.frame++
+      const paddleWidth = effectivePaddleWidth(game)
+
       // Paddle
       if (game.targetPaddleX !== null) {
         game.paddle.x = game.targetPaddleX
       }
       if (game.keys.left) game.paddle.x -= PADDLE_SPEED
       if (game.keys.right) game.paddle.x += PADDLE_SPEED
-      game.paddle.x = Math.max(0, Math.min(CANVAS_WIDTH - PADDLE_WIDTH, game.paddle.x))
+      game.paddle.x = Math.max(0, Math.min(CANVAS_WIDTH - paddleWidth, game.paddle.x))
 
       // Alien formation drift
       game.alienOffsetX += game.alienDirection * game.alienSpeed
@@ -200,10 +239,44 @@ export function useSkirmishGame() {
         game.alienDirection = -1
       }
 
+      // Mystery ship
+      if (!game.mysteryShip) {
+        game.mysteryShipTimer--
+        if (game.mysteryShipTimer <= 0) {
+          const fromLeft = Math.random() < 0.5
+          game.mysteryShip = {
+            x: fromLeft ? -MYSTERY_SHIP_WIDTH : CANVAS_WIDTH,
+            y: MYSTERY_SHIP_Y,
+            direction: fromLeft ? 1 : -1,
+          }
+        }
+      } else {
+        game.mysteryShip.x += MYSTERY_SHIP_SPEED * game.mysteryShip.direction
+        if (game.mysteryShip.x < -MYSTERY_SHIP_WIDTH - 10 || game.mysteryShip.x > CANVAS_WIDTH + 10) {
+          game.mysteryShip = null
+          game.mysteryShipTimer = randomSpawnDelay()
+        }
+      }
+
+      // Power-ups falling
+      game.powerUps = game.powerUps.filter(p => {
+        p.y += POWERUP_FALL_SPEED
+        if (
+          p.y + POWERUP_SIZE >= PADDLE_Y &&
+          p.y <= PADDLE_Y + PADDLE_HEIGHT &&
+          p.x >= game.paddle.x - POWERUP_SIZE / 2 &&
+          p.x <= game.paddle.x + paddleWidth + POWERUP_SIZE / 2
+        ) {
+          applyPowerUp(game, p.type)
+          return false
+        }
+        return p.y <= CANVAS_HEIGHT
+      })
+
       // Balls
       for (const ball of game.balls) {
         if (!ball.launched) {
-          ball.x = game.paddle.x + PADDLE_WIDTH / 2
+          ball.x = game.paddle.x + paddleWidth / 2
           continue
         }
 
@@ -228,12 +301,28 @@ export function useSkirmishGame() {
           ball.y + BALL_RADIUS >= PADDLE_Y &&
           ball.y + BALL_RADIUS <= PADDLE_Y + PADDLE_HEIGHT + 10 &&
           ball.x >= game.paddle.x - BALL_RADIUS &&
-          ball.x <= game.paddle.x + PADDLE_WIDTH + BALL_RADIUS
+          ball.x <= game.paddle.x + paddleWidth + BALL_RADIUS
         ) {
-          const hitPos = (ball.x - (game.paddle.x + PADDLE_WIDTH / 2)) / (PADDLE_WIDTH / 2)
+          const hitPos = (ball.x - (game.paddle.x + paddleWidth / 2)) / (paddleWidth / 2)
           ball.vy = -Math.abs(ball.vy)
           ball.vx = hitPos * game.ballSpeed
           ball.y = PADDLE_Y - BALL_RADIUS
+        }
+
+        // Mystery ship collision
+        if (game.mysteryShip) {
+          const ms = game.mysteryShip
+          if (
+            ball.x + BALL_RADIUS > ms.x &&
+            ball.x - BALL_RADIUS < ms.x + MYSTERY_SHIP_WIDTH &&
+            ball.y + BALL_RADIUS > ms.y &&
+            ball.y - BALL_RADIUS < ms.y + MYSTERY_SHIP_HEIGHT
+          ) {
+            setScore(s => s + MYSTERY_SHIP_POINTS)
+            game.mysteryShip = null
+            game.mysteryShipTimer = randomSpawnDelay()
+            ball.vy = -ball.vy
+          }
         }
 
         // Alien collisions — one per frame per ball
@@ -249,6 +338,11 @@ export function useSkirmishGame() {
             alien.alive = false
             ball.vy = -ball.vy
             setScore(s => s + ALIEN_TIERS[alien.row].points)
+
+            if (Math.random() < POWERUP_DROP_CHANCE) {
+              const type = Math.random() < 0.5 ? 'wide' : 'multiball'
+              game.powerUps.push({ x: rect.x + rect.width / 2, y: rect.y, type })
+            }
             break
           }
         }
@@ -270,50 +364,4 @@ export function useSkirmishGame() {
 
     const draw = () => {
       const game = gameRef.current
-
-      ctx.fillStyle = COLORS.background
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-
-      // Aliens
-      for (const alien of game.aliens) {
-        if (!alien.alive) continue
-        const rect = alienRect(alien, game)
-        ctx.fillStyle = ALIEN_TIERS[alien.row].color
-        ctx.beginPath()
-        ctx.roundRect(rect.x, rect.y, rect.width, rect.height, 4)
-        ctx.fill()
-      }
-
-      // Paddle
-      ctx.fillStyle = COLORS.paddle
-      ctx.shadowColor = COLORS.paddleGlow
-      ctx.shadowBlur = 10
-      ctx.beginPath()
-      ctx.roundRect(game.paddle.x, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT, 6)
-      ctx.fill()
-      ctx.shadowBlur = 0
-
-      // Balls
-      ctx.fillStyle = COLORS.ball
-      for (const ball of game.balls) {
-        ctx.beginPath()
-        ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2)
-        ctx.fill()
-      }
-    }
-
-    const loop = () => {
-      update()
-      draw()
-      rafRef.current = requestAnimationFrame(loop)
-    }
-    rafRef.current = requestAnimationFrame(loop)
-
-    return () => {
-      cancelAnimationFrame(rafRef.current)
-      clearTimeout(waveClearTimerRef.current)
-    }
-  }, [])
-
-  return { canvasRef, score, lives, wave, status, launch, reset, canvasWidth: CANVAS_WIDTH, canvasHeight: CANVAS_HEIGHT }
-}
+      const

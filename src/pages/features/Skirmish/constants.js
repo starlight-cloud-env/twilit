@@ -25,6 +25,25 @@ export const ROW_DROP_HEIGHT = ALIEN_HEIGHT + ALIEN_SPACING
 
 export const STARTING_LIVES = 3
 
+// ---------- Mystery ship ----------
+export const MYSTERY_SHIP_Y = 28
+export const MYSTERY_SHIP_WIDTH = 46
+export const MYSTERY_SHIP_HEIGHT = 18
+export const MYSTERY_SHIP_SPEED = 2.2
+export const MYSTERY_SHIP_POINTS = 150
+export const MYSTERY_SHIP_SPAWN_MIN_FRAMES = 600  // ~10s at 60fps
+export const MYSTERY_SHIP_SPAWN_MAX_FRAMES = 1200 // ~20s at 60fps
+export const MYSTERY_SHIP_COLOR = '#fbbf24'
+
+// ---------- Power-ups ----------
+export const POWERUP_DROP_CHANCE = 0.15
+export const POWERUP_SIZE = 22
+export const POWERUP_FALL_SPEED = 2
+export const POWERUP_WIDE_DURATION_FRAMES = 480 // ~8s at 60fps
+export const POWERUP_WIDE_MULTIPLIER = 1.6
+export const POWERUP_COLORS = { wide: '#38bdf8', multiball: '#f472b6' }
+export const POWERUP_LABELS = { wide: 'W', multiball: 'M' }
+
 // Top row scores highest — classic Invaders convention.
 export const ALIEN_TIERS = [
   { points: 50, color: '#f472b6' },
