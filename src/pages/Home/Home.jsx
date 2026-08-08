@@ -1,4 +1,4 @@
-import { Calendar, ListChecks, Star, Gamepad2, Receipt, Rocket } from 'lucide-react'
+import { Calendar, ListChecks, Star, Gamepad2, Receipt, Rocket, Target } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useBookmarks } from '../../hooks/useBookmarks.js'
 import Hero from '../../components/layout/Hero.jsx'
@@ -28,6 +28,14 @@ const SERVICES = [
     icon: Receipt,
     category: 'Utility',
     path: '/bills',
+    protected: true,
+  },
+  {
+    id: 'archery',
+    name: 'Archery',
+    icon: Target,
+    category: 'Utility',
+    path: '/archery',
     protected: true,
   },
   {

@@ -10,6 +10,8 @@ import Nebula from '../pages/features/Nebula/Nebula.jsx'
 import Skirmish from '../pages/features/Skirmish/Skirmish.jsx'
 import Bills from '../pages/features/Bills/Bills.jsx'
 import BillDetail from '../pages/features/Bills/BillDetail.jsx'
+import Archery from '../pages/features/Archery/Archery.jsx'
+import ScorecardDetail from '../pages/features/Archery/ScorecardDetail.jsx'
 import About from '../pages/About/About.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
 
@@ -64,6 +66,22 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <BillDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/archery"
+          element={
+            <ProtectedRoute>
+              <Archery />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/archery/:id"
+          element={
+            <ProtectedRoute>
+              <ScorecardDetail />
             </ProtectedRoute>
           }
         />
