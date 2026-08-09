@@ -6,4 +6,4 @@ export default function RouteLoading() {
       <span className={styles.pulse} />
     </div>
   )
-}
+} 
