@@ -24,7 +24,7 @@ export default class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
-      return (
+      return ( 
         <div className={styles.page}>
           <div className={styles.card}>
             <span className={styles.icon}>
