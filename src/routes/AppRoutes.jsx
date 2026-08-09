@@ -1,19 +1,25 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import PageWrapper from '../components/layout/PageWrapper.jsx'
+import RouteLoading from '../components/layout/RouteLoading.jsx'
 import Home from '../pages/Home/Home.jsx'
 import SignIn from '../pages/SignIn/SignIn.jsx'
 import AuthCallback from '../pages/AuthCallback/AuthCallback.jsx'
-import Calendar from '../pages/features/Calendar/Calendar.jsx'
-import Lists from '../pages/features/Lists/Lists.jsx'
-import ListDetail from '../pages/features/Lists/ListDetail.jsx'
-import Nebula from '../pages/features/Nebula/Nebula.jsx'
-import Skirmish from '../pages/features/Skirmish/Skirmish.jsx'
-import Bills from '../pages/features/Bills/Bills.jsx'
-import BillDetail from '../pages/features/Bills/BillDetail.jsx'
-import Archery from '../pages/features/Archery/Archery.jsx'
-import ScorecardDetail from '../pages/features/Archery/ScorecardDetail.jsx'
-import About from '../pages/About/About.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
+
+// Feature pages are lazy-loaded — Home, SignIn, and AuthCallback stay eager
+// since they're the critical first-load / auth-flow path and shouldn't
+// show a loading flicker.
+const Calendar = lazy(() => import('../pages/features/Calendar/Calendar.jsx'))
+const Lists = lazy(() => import('../pages/features/Lists/Lists.jsx'))
+const ListDetail = lazy(() => import('../pages/features/Lists/ListDetail.jsx'))
+const Nebula = lazy(() => import('../pages/features/Nebula/Nebula.jsx'))
+const Skirmish = lazy(() => import('../pages/features/Skirmish/Skirmish.jsx'))
+const Bills = lazy(() => import('../pages/features/Bills/Bills.jsx'))
+const BillDetail = lazy(() => import('../pages/features/Bills/BillDetail.jsx'))
+const Archery = lazy(() => import('../pages/features/Archery/Archery.jsx'))
+const ScorecardDetail = lazy(() => import('../pages/features/Archery/ScorecardDetail.jsx'))
+const About = lazy(() => import('../pages/About/About.jsx'))
 
 export default function AppRoutes() {
   return (
@@ -24,16 +30,16 @@ export default function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="/nebula" element={<Nebula />} />
-        <Route path="/skirmish" element={<Skirmish />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/nebula" element={<Suspense fallback={<RouteLoading />}><Nebula /></Suspense>} />
+        <Route path="/skirmish" element={<Suspense fallback={<RouteLoading />}><Skirmish /></Suspense>} />
+        <Route path="/about" element={<Suspense fallback={<RouteLoading />}><About /></Suspense>} />
 
         {/* Protected routes */}
         <Route
           path="/calendar"
           element={
             <ProtectedRoute>
-              <Calendar />
+              <Suspense fallback={<RouteLoading />}><Calendar /></Suspense>
             </ProtectedRoute>
           }
         />
@@ -41,7 +47,7 @@ export default function AppRoutes() {
           path="/lists"
           element={
             <ProtectedRoute>
-              <Lists />
+              <Suspense fallback={<RouteLoading />}><Lists /></Suspense>
             </ProtectedRoute>
           }
         />
@@ -49,7 +55,7 @@ export default function AppRoutes() {
           path="/lists/:id"
           element={
             <ProtectedRoute>
-              <ListDetail />
+              <Suspense fallback={<RouteLoading />}><ListDetail /></Suspense>
             </ProtectedRoute>
           }
         />
@@ -57,7 +63,7 @@ export default function AppRoutes() {
           path="/bills"
           element={
             <ProtectedRoute>
-              <Bills />
+              <Suspense fallback={<RouteLoading />}><Bills /></Suspense>
             </ProtectedRoute>
           }
         />
@@ -65,7 +71,7 @@ export default function AppRoutes() {
           path="/bills/:id"
           element={
             <ProtectedRoute>
-              <BillDetail />
+              <Suspense fallback={<RouteLoading />}><BillDetail /></Suspense>
             </ProtectedRoute>
           }
         />
@@ -73,7 +79,7 @@ export default function AppRoutes() {
           path="/archery"
           element={
             <ProtectedRoute>
-              <Archery />
+              <Suspense fallback={<RouteLoading />}><Archery /></Suspense>
             </ProtectedRoute>
           }
         />
@@ -81,7 +87,7 @@ export default function AppRoutes() {
           path="/archery/:id"
           element={
             <ProtectedRoute>
-              <ScorecardDetail />
+              <Suspense fallback={<RouteLoading />}><ScorecardDetail /></Suspense>
             </ProtectedRoute>
           }
         />
