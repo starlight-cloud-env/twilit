@@ -12,6 +12,10 @@ import {
   POWERUP_DROP_CHANCE, POWERUP_SIZE, POWERUP_FALL_SPEED,
   POWERUP_WIDE_DURATION_FRAMES, POWERUP_WIDE_MULTIPLIER, POWERUP_COLORS, POWERUP_LABELS,
 } from '../pages/features/Skirmish/constants.js'
+import {
+  alienRect, effectivePaddleWidth, circleIntersectsRect,
+  calculatePaddleBounceVx, clampAlienDrift,
+} from '../pages/features/Skirmish/gameLogic.js'
 
 function createAlienGrid() {
   const aliens = []
@@ -53,26 +57,12 @@ function freshGameState() {
     keys: { left: false, right: false },
     targetPaddleX: null,
     inputMode: 'pointer',
-    targetPaddleX: null,
     frame: 0,
     mysteryShip: null,
     mysteryShipTimer: randomSpawnDelay(),
     powerUps: [],
     paddleWideUntilFrame: 0,
   }
-}
-
-function alienRect(alien, game) {
-  return {
-    x: game.alienOffsetX + alien.col * (ALIEN_WIDTH + ALIEN_SPACING),
-    y: ALIEN_TOP_Y + alien.row * (ALIEN_HEIGHT + ALIEN_SPACING) + game.formationDropY,
-    width: ALIEN_WIDTH,
-    height: ALIEN_HEIGHT,
-  }
-}
-
-function effectivePaddleWidth(game) {
-  return game.frame < game.paddleWideUntilFrame ? PADDLE_WIDTH * POWERUP_WIDE_MULTIPLIER : PADDLE_WIDTH
 }
 
 function applyPowerUp(game, type) {
@@ -130,9 +120,10 @@ export function useSkirmishGame() {
     if (!canvas) return
     const rect = canvas.getBoundingClientRect()
     const canvasX = (clientX - rect.left) * (CANVAS_WIDTH / rect.width)
-    const width = effectivePaddleWidth(gameRef.current)
-    gameRef.current.targetPaddleX = canvasX - width / 2
-    gameRef.current.inputMode = 'pointer'
+    const game = gameRef.current
+    const width = effectivePaddleWidth(game.frame, game.paddleWideUntilFrame)
+    game.targetPaddleX = canvasX - width / 2
+    game.inputMode = 'pointer'
   }, [])
 
   // ---------- input ----------
@@ -185,7 +176,8 @@ export function useSkirmishGame() {
 
     const handleMiss = (game) => {
       game.formationDropY += ROW_DROP_HEIGHT
-      game.balls = [createBall(game.paddle.x, effectivePaddleWidth(game))]
+      const paddleWidth = effectivePaddleWidth(game.frame, game.paddleWideUntilFrame)
+      game.balls = [createBall(game.paddle.x, paddleWidth)]
 
       setLives(prev => {
         const next = prev - 1
@@ -211,7 +203,8 @@ export function useSkirmishGame() {
         game.alienDirection = 1
         game.alienSpeed = Math.min(game.alienSpeed * 1.08, MAX_ALIEN_SPEED)
         game.ballSpeed = Math.min(game.ballSpeed * 1.04, MAX_BALL_SPEED)
-        game.balls = [createBall(game.paddle.x, effectivePaddleWidth(game))]
+        const paddleWidth = effectivePaddleWidth(game.frame, game.paddleWideUntilFrame)
+        game.balls = [createBall(game.paddle.x, paddleWidth)]
         setWave(w => w + 1)
         setStatus('playing')
       }, 1400)
@@ -222,7 +215,7 @@ export function useSkirmishGame() {
       if (statusRef.current !== 'playing') return
 
       game.frame++
-      const paddleWidth = effectivePaddleWidth(game)
+      const paddleWidth = effectivePaddleWidth(game.frame, game.paddleWideUntilFrame)
 
       // Paddle — whichever input was used most recently stays in control.
       // Releasing keys no longer snaps back to a stale mouse position;
@@ -236,14 +229,12 @@ export function useSkirmishGame() {
       game.paddle.x = Math.max(0, Math.min(CANVAS_WIDTH - paddleWidth, game.paddle.x))
 
       // Alien formation drift
-      game.alienOffsetX += game.alienDirection * game.alienSpeed
-      if (game.alienOffsetX <= 0) {
-        game.alienOffsetX = 0
-        game.alienDirection = 1
-      } else if (game.alienOffsetX + ALIEN_GRID_WIDTH >= CANVAS_WIDTH) {
-        game.alienOffsetX = CANVAS_WIDTH - ALIEN_GRID_WIDTH
-        game.alienDirection = -1
-      }
+      const drift = clampAlienDrift(
+        game.alienOffsetX + game.alienDirection * game.alienSpeed,
+        game.alienDirection
+      )
+      game.alienOffsetX = drift.offsetX
+      game.alienDirection = drift.direction
 
       // Mystery ship
       if (!game.mysteryShip) {
@@ -301,29 +292,21 @@ export function useSkirmishGame() {
           ball.vy = -ball.vy
         }
 
+        const ballCircle = { x: ball.x, y: ball.y, radius: BALL_RADIUS }
+
         // Paddle collision
-        if (
-          ball.vy > 0 &&
-          ball.y + BALL_RADIUS >= PADDLE_Y &&
-          ball.y + BALL_RADIUS <= PADDLE_Y + PADDLE_HEIGHT + 10 &&
-          ball.x >= game.paddle.x - BALL_RADIUS &&
-          ball.x <= game.paddle.x + paddleWidth + BALL_RADIUS
-        ) {
-          const hitPos = (ball.x - (game.paddle.x + paddleWidth / 2)) / (paddleWidth / 2)
+        const paddleRect = { x: game.paddle.x, y: PADDLE_Y, width: paddleWidth, height: PADDLE_HEIGHT + 10 }
+        if (ball.vy > 0 && circleIntersectsRect(ballCircle, paddleRect)) {
           ball.vy = -Math.abs(ball.vy)
-          ball.vx = hitPos * game.ballSpeed
+          ball.vx = calculatePaddleBounceVx(ball.x, game.paddle.x, paddleWidth, game.ballSpeed)
           ball.y = PADDLE_Y - BALL_RADIUS
         }
 
         // Mystery ship collision
         if (game.mysteryShip) {
           const ms = game.mysteryShip
-          if (
-            ball.x + BALL_RADIUS > ms.x &&
-            ball.x - BALL_RADIUS < ms.x + MYSTERY_SHIP_WIDTH &&
-            ball.y + BALL_RADIUS > ms.y &&
-            ball.y - BALL_RADIUS < ms.y + MYSTERY_SHIP_HEIGHT
-          ) {
+          const shipRect = { x: ms.x, y: ms.y, width: MYSTERY_SHIP_WIDTH, height: MYSTERY_SHIP_HEIGHT }
+          if (circleIntersectsRect(ballCircle, shipRect)) {
             setScore(s => s + MYSTERY_SHIP_POINTS)
             game.mysteryShip = null
             game.mysteryShipTimer = randomSpawnDelay()
@@ -334,13 +317,8 @@ export function useSkirmishGame() {
         // Alien collisions — one per frame per ball
         for (const alien of game.aliens) {
           if (!alien.alive) continue
-          const rect = alienRect(alien, game)
-          if (
-            ball.x + BALL_RADIUS > rect.x &&
-            ball.x - BALL_RADIUS < rect.x + rect.width &&
-            ball.y + BALL_RADIUS > rect.y &&
-            ball.y - BALL_RADIUS < rect.y + rect.height
-          ) {
+          const rect = alienRect(alien, game.alienOffsetX, game.formationDropY)
+          if (circleIntersectsRect(ballCircle, rect)) {
             alien.alive = false
             ball.vy = -ball.vy
             setScore(s => s + ALIEN_TIERS[alien.row].points)
@@ -370,7 +348,7 @@ export function useSkirmishGame() {
 
     const draw = () => {
       const game = gameRef.current
-      const paddleWidth = effectivePaddleWidth(game)
+      const paddleWidth = effectivePaddleWidth(game.frame, game.paddleWideUntilFrame)
 
       ctx.fillStyle = COLORS.background
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -378,7 +356,7 @@ export function useSkirmishGame() {
       // Aliens
       for (const alien of game.aliens) {
         if (!alien.alive) continue
-        const rect = alienRect(alien, game)
+        const rect = alienRect(alien, game.alienOffsetX, game.formationDropY)
         ctx.fillStyle = ALIEN_TIERS[alien.row].color
         ctx.beginPath()
         ctx.roundRect(rect.x, rect.y, rect.width, rect.height, 4)
