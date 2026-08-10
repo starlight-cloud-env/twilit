@@ -5,6 +5,7 @@ import { supabase } from '../../../lib/supabase.js'
 import { useScorecardEnds } from '../../../hooks/useScorecardEnds.js'
 import EndRow from './components/EndRow.jsx'
 import { ARROWS_PER_END } from './constants.js'
+import { countNinesAndTens } from './scoring.js'
 import styles from './ScorecardDetail.module.css'
 
 export default function ScorecardDetail() {
@@ -74,6 +75,8 @@ export default function ScorecardDetail() {
   )
   const arrowsShot = ends.reduce((count, end) => count + end.arrows.length, 0)
   const average = arrowsShot > 0 ? (grandTotal / arrowsShot).toFixed(2) : '0.00'
+  const allScores = ends.flatMap(end => end.arrows)
+  const { nines, tens } = countNinesAndTens(allScores)
 
   return (
     <div className={styles.page}>
@@ -120,12 +123,22 @@ export default function ScorecardDetail() {
           <span className={styles.statLabel}>Average</span>
           <span className={styles.statValue}>{average}</span>
         </div>
+        <div className={styles.statBox}>
+          <span className={styles.statLabel}>9s / 10s</span>
+          <span className={styles.statValue}>{nines}/{tens}</span>
+        </div>
       </div>
 
       {endsLoading ? (
         <p className={styles.stateText}>Loading ends...</p>
       ) : (
         <div className={styles.endsList}>
+          <div className={styles.endsHeader}>
+            <span className={styles.endsHeaderLabel}>End</span>
+            <span className={styles.endsHeaderArrows}>Arrows</span>
+            <span className={styles.endsHeaderTotal}>Total</span>
+            <span className={styles.endsHeaderNinesTens}>9s/10s</span>
+          </div>
           {ends.map(end => (
             <EndRow
               key={end.id}

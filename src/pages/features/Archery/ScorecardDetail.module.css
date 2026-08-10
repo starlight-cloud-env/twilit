@@ -117,8 +117,8 @@
 
 .statsRow {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
 }
 
 .statBox {
@@ -161,6 +161,47 @@
   padding: 0.5rem 1rem;
 }
 
+.endsHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.3rem 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--color-muted);
+  margin-bottom: 0.15rem;
+}
+
+.endsHeaderLabel,
+.endsHeaderArrows,
+.endsHeaderTotal,
+.endsHeaderNinesTens {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.endsHeaderLabel {
+  flex-shrink: 0;
+  width: 56px;
+}
+
+.endsHeaderArrows {
+  flex: 1;
+}
+
+.endsHeaderTotal {
+  flex-shrink: 0;
+  width: 34px;
+  text-align: right;
+}
+
+.endsHeaderNinesTens {
+  flex-shrink: 0;
+  width: 46px;
+  text-align: right;
+}
+
 .stateText {
   color: var(--color-muted);
   font-size: 0.9rem;
@@ -169,6 +210,10 @@
 @media (max-width: 600px) {
   .page {
     padding: 1rem;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .statValue {

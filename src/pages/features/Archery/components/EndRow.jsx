@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { countNinesAndTens } from '../scoring.js'
 import styles from './EndRow.module.css'
 
 export default function EndRow({ end, arrowCount, onUpdateArrows }) {
@@ -38,6 +39,9 @@ export default function EndRow({ end, arrowCount, onUpdateArrows }) {
     return sum + (n ?? 0)
   }, 0)
 
+  const scores = values.map(clampScore).filter(n => n !== null)
+  const { nines, tens } = countNinesAndTens(scores)
+
   return (
     <div className={styles.row}>
       <span className={styles.endLabel}>End {end.end_number}</span>
@@ -60,6 +64,7 @@ export default function EndRow({ end, arrowCount, onUpdateArrows }) {
       </div>
 
       <span className={styles.endTotal}>{total}</span>
+      <span className={styles.ninesTens} title="9s / 10s this end">{nines}/{tens}</span>
     </div>
   )
 }
