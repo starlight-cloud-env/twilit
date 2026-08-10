@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Trash2 } from 'lucide-react'
 import styles from './PersonRow.module.css'
+import { calculatePersonTotal } from '../calculations.js'
 
 export default function PersonRow({ person, taxMultiplier, onUpdateSubtotal, onDelete }) {
   const [draft, setDraft] = useState(String(person.subtotal))
@@ -18,7 +19,7 @@ export default function PersonRow({ person, taxMultiplier, onUpdateSubtotal, onD
     }
   }
 
-  const total = person.subtotal * taxMultiplier
+  const total = calculatePersonTotal(person.subtotal, taxMultiplier)
 
   return (
     <div className={styles.row}>

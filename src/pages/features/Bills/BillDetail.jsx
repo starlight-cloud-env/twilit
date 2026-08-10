@@ -5,6 +5,12 @@ import { supabase } from '../../../lib/supabase.js'
 import { useBillPeople } from '../../../hooks/useBillPeople.js'
 import PersonRow from './components/PersonRow.jsx'
 import styles from './BillDetail.module.css'
+import {
+  calculateTaxMultiplier,
+  calculateItemizedGrandTotal,
+  calculateEvenSplitGrandTotal,
+  calculateEvenSplitPerPerson,
+} from './calculations.js'
 
 export default function BillDetail() {
   const { id } = useParams()
@@ -127,12 +133,10 @@ export default function BillDetail() {
     )
   }
 
-  const taxMultiplier = 1 + bill.tax_rate / 100
-  const itemizedGrandTotal = people.reduce((sum, p) => sum + p.subtotal * taxMultiplier, 0)
-  const evenGrandTotal = (bill.even_split_total ?? 0) * taxMultiplier
-  const evenPerPerson = bill.even_split_people_count > 0
-    ? evenGrandTotal / bill.even_split_people_count
-    : 0
+  const taxMultiplier = calculateTaxMultiplier(bill.tax_rate)
+  const itemizedGrandTotal = calculateItemizedGrandTotal(people, taxMultiplier)
+  const evenGrandTotal = calculateEvenSplitGrandTotal(bill.even_split_total, taxMultiplier)
+  const evenPerPerson = calculateEvenSplitPerPerson(evenGrandTotal, bill.even_split_people_count)
 
   return (
     <div className={styles.page}>
