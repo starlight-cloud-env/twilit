@@ -3,8 +3,8 @@
   padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  max-width: 640px;
+  gap: 1.1rem;
+  max-width: 540px;
   margin: 0 auto;
   width: 100%;
 }
@@ -115,10 +115,46 @@
   color: var(--color-text);
 }
 
+.statsPanel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.statsToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.statsToggleScore {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.statsToggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
 .statsRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.6rem;
+  padding: 0 0.85rem 0.85rem;
 }
 
 .statBox {
@@ -126,10 +162,10 @@
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  background: var(--color-surface);
+  background: var(--color-bg);
   border: 1px solid var(--color-muted);
   border-radius: var(--radius-md);
-  padding: 0.75rem 0.5rem;
+  padding: 0.6rem 0.4rem;
 }
 
 .statLabel {
@@ -158,14 +194,14 @@
   background: var(--color-surface);
   border: 1px solid var(--color-muted);
   border-radius: var(--radius-lg);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .endsHeader {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.3rem 0.25rem 0.5rem;
+  gap: 0.4rem;
+  padding: 0.25rem 0.15rem 0.4rem;
   border-bottom: 1px solid var(--color-muted);
   margin-bottom: 0.15rem;
 }
@@ -174,7 +210,7 @@
 .endsHeaderArrows,
 .endsHeaderTotal,
 .endsHeaderNinesTens {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   color: var(--color-muted);
   text-transform: uppercase;
@@ -183,7 +219,7 @@
 
 .endsHeaderLabel {
   flex-shrink: 0;
-  width: 56px;
+  width: 38px;
 }
 
 .endsHeaderArrows {
@@ -192,13 +228,13 @@
 
 .endsHeaderTotal {
   flex-shrink: 0;
-  width: 34px;
+  width: 26px;
   text-align: right;
 }
 
 .endsHeaderNinesTens {
   flex-shrink: 0;
-  width: 46px;
+  width: 36px;
   text-align: right;
 }
 
@@ -209,7 +245,7 @@
 
 @media (max-width: 600px) {
   .page {
-    padding: 1rem;
+    padding: 0.85rem;
   }
 
   .statsRow {
@@ -218,5 +254,9 @@
 
   .statValue {
     font-size: 1rem;
+  }
+
+  .endsList {
+    padding: 0.5rem 0.5rem;
   }
 }

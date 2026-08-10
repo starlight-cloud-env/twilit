@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Trash2 } from 'lucide-react'
+import { ArrowLeft, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
 import { supabase } from '../../../lib/supabase.js'
 import { useScorecardEnds } from '../../../hooks/useScorecardEnds.js'
 import EndRow from './components/EndRow.jsx'
@@ -17,6 +17,7 @@ export default function ScorecardDetail() {
   const [notFound, setNotFound] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [statsOpen, setStatsOpen] = useState(false)
 
   const { ends, loading: endsLoading, updateEndArrows } = useScorecardEnds(id)
 
@@ -106,27 +107,45 @@ export default function ScorecardDetail() {
         )}
       </div>
 
-      <div className={styles.statsRow}>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Score</span>
-          <span className={styles.statValue}>
-            {grandTotal}<span className={styles.statMax}> / {maxPossible}</span>
+      <div className={styles.statsPanel}>
+        <button
+          className={styles.statsToggle}
+          onClick={() => setStatsOpen(prev => !prev)}
+          aria-expanded={statsOpen}
+        >
+          <span className={styles.statsToggleScore}>
+            {grandTotal} <span className={styles.statMax}>/ {maxPossible}</span>
           </span>
-        </div>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Arrows</span>
-          <span className={styles.statValue}>
-            {arrowsShot}<span className={styles.statMax}> / {totalArrows}</span>
+          <span className={styles.statsToggleLabel}>
+            {statsOpen ? 'Hide Stats' : 'Show Stats'}
+            {statsOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
           </span>
-        </div>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>Average</span>
-          <span className={styles.statValue}>{average}</span>
-        </div>
-        <div className={styles.statBox}>
-          <span className={styles.statLabel}>9s / 10s</span>
-          <span className={styles.statValue}>{nines}/{tens}</span>
-        </div>
+        </button>
+
+        {statsOpen && (
+          <div className={styles.statsRow}>
+            <div className={styles.statBox}>
+              <span className={styles.statLabel}>Score</span>
+              <span className={styles.statValue}>
+                {grandTotal}<span className={styles.statMax}> / {maxPossible}</span>
+              </span>
+            </div>
+            <div className={styles.statBox}>
+              <span className={styles.statLabel}>Arrows</span>
+              <span className={styles.statValue}>
+                {arrowsShot}<span className={styles.statMax}> / {totalArrows}</span>
+              </span>
+            </div>
+            <div className={styles.statBox}>
+              <span className={styles.statLabel}>Average</span>
+              <span className={styles.statValue}>{average}</span>
+            </div>
+            <div className={styles.statBox}>
+              <span className={styles.statLabel}>9s / 10s</span>
+              <span className={styles.statValue}>{nines}/{tens}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {endsLoading ? (
