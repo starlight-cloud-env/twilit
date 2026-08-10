@@ -22,15 +22,15 @@
 .arrowInputs {
   flex: 1;
   display: flex;
+  justify-content: space-between;
   gap: 0.25rem;
   min-width: 0;
 }
 
 .arrowInput {
-  flex: 1;
+  flex: 0 1 40px;
   min-width: 0;
-  width: 100%;
-  max-width: 32px;
+  max-width: 40px;
   padding: 0.32rem 0;
   font-size: 0.78rem;
   font-weight: 600;
@@ -74,6 +74,7 @@
   font-weight: 600;
   color: var(--color-muted);
   font-variant-numeric: tabular-nums;
+  margin-left: 0.4rem;
 }
 
 @media (max-width: 380px) {
