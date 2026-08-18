@@ -12,6 +12,30 @@
   justify-content: space-between;
 }
 
+.pinnedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.pinnedList {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius-lg);
+  padding: 0.25rem 0.75rem;
+}
+
 .pageTitle {
   font-size: 1.4rem;
   font-weight: 700;

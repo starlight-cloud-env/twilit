@@ -33,6 +33,18 @@
   white-space: nowrap;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.pinIcon {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
 .preview {
   font-size: 0.78rem;
   color: var(--color-muted);

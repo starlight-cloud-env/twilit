@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Pin } from 'lucide-react'
 import styles from './NoteRow.module.css'
 
 function stripHtml(html) {
@@ -27,7 +27,10 @@ export default function NoteRow({ note, folderId, onDelete }) {
     <div className={styles.row} onClick={() => navigate(`/notes/${folderId}/${note.id}`)}>
 
       <div className={styles.info}>
-        <span className={styles.title}>{note.title || 'Untitled'}</span>
+        <span className={styles.titleRow}>
+          {note.is_pinned && <Pin size={12} className={styles.pinIcon} fill="currentColor" />}
+          <span className={styles.title}>{note.title || 'Untitled'}</span>
+        </span>
         {preview && <span className={styles.preview}>{preview}</span>}
       </div>
 

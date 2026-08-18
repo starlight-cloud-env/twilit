@@ -12,12 +12,13 @@ export function useNotes(folderId) {
     fetchNotes()
   }, [folderId])
 
-  const fetchNotes = async () => {
+    const fetchNotes = async () => {
     setLoading(true)
     const { data, error } = await supabase
       .from('notes')
       .select('*')
       .eq('folder_id', folderId)
+      .order('is_pinned', { ascending: false })
       .order('updated_at', { ascending: false })
 
     if (!error && data) setNotes(data)

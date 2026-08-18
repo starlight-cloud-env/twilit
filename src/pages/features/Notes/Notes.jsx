@@ -1,16 +1,32 @@
 import { useState } from 'react'
-import { Book, Plus } from 'lucide-react'
+import { Book, Plus, Pin } from 'lucide-react'
 import { useNotesFolders } from '../../../hooks/useNotesFolders.js'
+import { usePinnedNotes } from '../../../hooks/usePinnedNotes.js'
 import FolderCard from './components/FolderCard.jsx'
 import NewFolderModal from './components/NewFolderModal.jsx'
+import PinnedNoteRow from './components/PinnedNoteRow.jsx'
 import styles from './Notes.module.css'
 
 export default function Notes() {
   const { folders, loading, createFolder, deleteFolder } = useNotesFolders()
+  const { pinnedNotes, loading: pinnedLoading } = usePinnedNotes()
   const [showNewModal, setShowNewModal] = useState(false)
 
   return (
     <div className={styles.page}>
+
+      {!pinnedLoading && pinnedNotes.length > 0 && (
+        <section className={styles.pinnedSection}>
+          <h2 className={styles.sectionTitle}>
+            <Pin size={16} fill="currentColor" /> Pinned
+          </h2>
+          <div className={styles.pinnedList}>
+            {pinnedNotes.map(note => (
+              <PinnedNoteRow key={note.id} note={note} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className={styles.toolbar}>
         <h1 className={styles.pageTitle}>Notes</h1>
