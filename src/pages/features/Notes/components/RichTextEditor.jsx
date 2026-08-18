@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect, useCallback, useState } from 'react'
 import { Bold, Italic, Underline as UnderlineIcon, Highlighter, Palette } from 'lucide-react'
 import styles from './RichTextEditor.module.css'
 
@@ -13,6 +13,8 @@ export default function RichTextEditor({ initialContent, onChange }) {
   const editorRef = useRef(null)
   const savedRangeRef = useRef(null)
   const hasInitialized = useRef(false)
+
+  const [activeFormats, setActiveFormats] = useState({ bold: false, italic: false, underline: false })
 
   // contentEditable is uncontrolled by design — setting innerHTML from
   // React state on every render would reset the cursor position while
@@ -30,6 +32,40 @@ export default function RichTextEditor({ initialContent, onChange }) {
     }
   }, [onChange])
 
+  // Reflects the formatting actually active at the cursor/selection onto
+  // the toolbar, so Bold/Italic/Underline visibly "glow" when the text
+  // you're on (or about to type) already has that formatting.
+  const updateActiveFormats = useCallback(() => {
+    try {
+      setActiveFormats({
+        bold: document.queryCommandState('bold'),
+        italic: document.queryCommandState('italic'),
+        underline: document.queryCommandState('underline'),
+      })
+    } catch {
+      // queryCommandState can throw in rare edge cases (e.g. no active
+      // selection yet) — safe to just skip the update when that happens.
+    }
+  }, [])
+
+  // Tracks the browser's own selection changes (arrow keys, clicking
+  // around, etc.), filtered to only react when the selection is actually
+  // inside this editor.
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const editor = editorRef.current
+      if (!editor) return
+      const sel = window.getSelection()
+      if (!sel || sel.rangeCount === 0) return
+      const range = sel.getRangeAt(0)
+      if (!editor.contains(range.commonAncestorContainer)) return
+      updateActiveFormats()
+    }
+
+    document.addEventListener('selectionchange', handleSelectionChange)
+    return () => document.removeEventListener('selectionchange', handleSelectionChange)
+  }, [updateActiveFormats])
+
   // onMouseDown + preventDefault (rather than onClick) keeps the editor's
   // current text selection intact — clicking a toolbar button would
   // otherwise blur the editor and lose the selection before the command
@@ -39,6 +75,7 @@ export default function RichTextEditor({ initialContent, onChange }) {
     editorRef.current?.focus()
     document.execCommand(command, false, value)
     emitChange()
+    updateActiveFormats()
   }
 
   // Native <input type="color"> steals focus to open its own picker,
@@ -83,13 +120,28 @@ export default function RichTextEditor({ initialContent, onChange }) {
     <div className={styles.wrap}>
 
       <div className={styles.toolbar}>
-        <button type="button" className={styles.toolButton} onMouseDown={runCommand('bold')} title="Bold">
+        <button
+          type="button"
+          className={`${styles.toolButton} ${activeFormats.bold ? styles.active : ''}`}
+          onMouseDown={runCommand('bold')}
+          title="Bold"
+        >
           <Bold size={16} />
         </button>
-        <button type="button" className={styles.toolButton} onMouseDown={runCommand('italic')} title="Italic">
+        <button
+          type="button"
+          className={`${styles.toolButton} ${activeFormats.italic ? styles.active : ''}`}
+          onMouseDown={runCommand('italic')}
+          title="Italic"
+        >
           <Italic size={16} />
         </button>
-        <button type="button" className={styles.toolButton} onMouseDown={runCommand('underline')} title="Underline">
+        <button
+          type="button"
+          className={`${styles.toolButton} ${activeFormats.underline ? styles.active : ''}`}
+          onMouseDown={runCommand('underline')}
+          title="Underline"
+        >
           <UnderlineIcon size={16} />
         </button>
 
@@ -120,6 +172,8 @@ export default function RichTextEditor({ initialContent, onChange }) {
         contentEditable
         suppressContentEditableWarning
         onInput={emitChange}
+        onKeyUp={updateActiveFormats}
+        onMouseUp={updateActiveFormats}
         data-placeholder="Start writing..."
       />
 

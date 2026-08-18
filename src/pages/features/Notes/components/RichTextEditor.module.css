@@ -38,6 +38,13 @@
   background: var(--color-surface);
 }
 
+.active {
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glow);
+}
+
 .divider {
   width: 1px;
   height: 20px;
