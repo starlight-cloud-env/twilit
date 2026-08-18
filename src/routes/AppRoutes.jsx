@@ -19,6 +19,9 @@ const Bills = lazy(() => import('../pages/features/Bills/Bills.jsx'))
 const BillDetail = lazy(() => import('../pages/features/Bills/BillDetail.jsx'))
 const Archery = lazy(() => import('../pages/features/Archery/Archery.jsx'))
 const ScorecardDetail = lazy(() => import('../pages/features/Archery/ScorecardDetail.jsx'))
+const Notes = lazy(() => import('../pages/features/Notes/Notes.jsx'))
+const FolderDetail = lazy(() => import('../pages/features/Notes/FolderDetail.jsx'))
+const NoteEditor = lazy(() => import('../pages/features/Notes/NoteEditor.jsx'))
 const About = lazy(() => import('../pages/About/About.jsx'))
 
 export default function AppRoutes() {
@@ -88,6 +91,30 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <Suspense fallback={<RouteLoading />}><ScorecardDetail /></Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<RouteLoading />}><Notes /></Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes/:id"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<RouteLoading />}><FolderDetail /></Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes/:folderId/:noteId"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<RouteLoading />}><NoteEditor /></Suspense>
             </ProtectedRoute>
           }
         />

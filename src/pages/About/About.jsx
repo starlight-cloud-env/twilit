@@ -59,7 +59,7 @@ export default function About() {
         <PlaceholderNote>
           Roadmap:
           <ul>
-            <li>» Astroids-style game that uses a Break-out style system</li>
+            <li>» Powerful Notes</li>
             <li>» Pinball game</li>
             <li>» Location Finder</li>
           </ul>
