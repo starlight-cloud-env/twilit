@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NotebookText, Plus } from 'lucide-react'
+import { Book, Plus } from 'lucide-react'
 import { useNotesFolders } from '../../../hooks/useNotesFolders.js'
 import FolderCard from './components/FolderCard.jsx'
 import NewFolderModal from './components/NewFolderModal.jsx'
@@ -23,7 +23,7 @@ export default function Notes() {
         <p className={styles.stateText}>Loading your folders...</p>
       ) : folders.length === 0 ? (
         <div className={styles.emptyState}>
-          <NotebookText size={40} strokeWidth={1.5} />
+          <Book size={40} strokeWidth={1.5} />
           <p className={styles.stateText}>No folders yet.</p>
           <button className={styles.newButton} onClick={() => setShowNewModal(true)}>
             <Plus size={16} /> Create your first folder
