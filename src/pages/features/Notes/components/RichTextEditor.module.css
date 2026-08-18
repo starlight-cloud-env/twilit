@@ -94,46 +94,42 @@
   pointer-events: none;
 }
 
-.ptSizeGroup {
+.clearButton {
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  align-self: center;
+  margin-top: -8px;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-muted);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.clearButton:hover {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.sizeSelect {
   height: 30px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  color: var(--color-text);
   background: var(--color-surface);
   border: 1px solid var(--color-muted);
   border-radius: var(--radius-sm);
-  padding: 0 0.5rem;
-  transition: border-color var(--transition-fast);
-}
-
-.ptSizeGroup:focus-within {
-  border-color: var(--color-accent);
-}
-
-.ptSizeInput {
-  width: 32px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  font-family: inherit;
-  color: var(--color-text);
-  background: none;
-  border: none;
+  padding: 0 0.4rem;
   outline: none;
-  text-align: right;
-
-  -moz-appearance: textfield;
-  appearance: textfield;
+  cursor: pointer;
 }
 
-.ptSizeInput::-webkit-outer-spin-button,
-.ptSizeInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.ptSizeLabel {
-  font-size: 0.72rem;
-  color: var(--color-muted);
+.sizeSelect:focus {
+  border-color: var(--color-accent);
 }
 
 .editor {
@@ -151,4 +147,27 @@
   content: attr(data-placeholder);
   color: var(--color-muted);
   pointer-events: none;
+}
+
+/* Larger touch targets on mobile — 30px buttons are below the ~44px
+   comfortable-tap-size guideline and were part of why this felt clunky
+   on phones. */
+@media (hover: none) and (pointer: coarse) {
+  .toolButton,
+  .colorSwatch,
+  .sizeSelect {
+    width: 40px;
+    height: 40px;
+  }
+
+  .sizeSelect {
+    width: auto;
+    padding: 0 0.5rem;
+  }
+
+  .clearButton {
+    width: 26px;
+    height: 26px;
+    margin-top: -10px;
+  }
 }
